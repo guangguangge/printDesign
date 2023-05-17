@@ -379,7 +379,7 @@
            
             <div class="tips_close" onclick="ptDemo.closeTips()">×</div>
         </div>
-		<script async type="text/javascript" src="http://localhost:11027/desktool.js?name=desktool&callback=ptDemo.onDesktoolInit"></script>
+		<script async type="text/javascript" src="http://localhost:11027/desktool.js?name=desktool&callback="></script>
 		<script type="text/javascript">
 			$(function(){
 				// 操作提示栏
@@ -393,15 +393,11 @@
 				});	
 			})
 			let ptDemo={
-				logoBase64:null,
-				onDesktoolInit:function(){
-					desktool('getLogo').then(r=>ptDemo.logoBase64=r.data);
-				},
 				setTheme:function(themeColors){
 					ptDesign.setTheme(themeColors);
 				},
 				getTp:function(){
-					let tp={"width":210,"height":"auto","wrapY":5,"baseField":{"lineType":"dashed","fontFamily":"Arial","fontSize":9,"fontWrap":1,"imgModel":2,"imgCache":1},"theme":{"color1":"#3498db","color2":"#ffffff"},"autoHeight":1,"fields":[{"type":"row","autoY":0,"columnNum":1,"y":0,"children":[{"type":"cell","text":"AA\rCCC\rDDDDD","align":"left","width":57.944,"x":0}],"x":0},{"type":"row","autoY":1,"columnNum":2,"groupVar":"items","y":15.346,"children":[{"type":"cell","text":"BBCC","var":"itemName","align":"left","width":10,"x":0},{"type":"cell","text":"BBCC","var":"itemCount","fontSize":20,"align":"left","width":10,"x":10}],"x":0},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"123","width":10,"height":5,"imgEngine":"CODE_128","y":15.346,"x":25},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"4444","width":10,"height":5,"imgEngine":"QR_CODE","y":35,"x":5},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"5555555","width":20,"height":15,"imgEngine":"CODE_128","y":35,"x":20},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"66666","width":5,"height":5,"imgEngine":"CODE_128","y":35,"x":50},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"777777","width":25,"height":5,"imgEngine":"CODE_128","y":70,"x":0},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"8888888","width":25,"height":5,"imgEngine":"CODE_128","y":70,"x":100},{"type":"img","autoY":1,"text":"123","width":20,"height":10,"imgEngine":"CODE_128","y":100.046,"x":0}]}
+					let tp={"width":210,"height":297,"wrapY":1,"baseField":{"lineType":"dashed","fontFamily":"Arial","fontSize":9,"fontWrap":1,"imgModel":1,"imgCache":1},"theme":{"color1":"#3498db","color2":"#ffffff"},"autoHeight":0,"fields":[{"type":"row","autoY":0,"columnNum":1,"y":0.794,"children":[{"type":"cell","text":"小票标题","var":"title","align":"center","width":210.079,"x":0}],"x":0},{"type":"img","autoY":0,"text":"LOGO","var":"logo","width":17.462,"height":14.023,"imgEngine":"QR_CODE","y":4.763,"x":96.308},{"type":"line","autoY":0,"lineType":"solid","y":20.637,"x":0},{"type":"row","autoY":0,"columnNum":2,"y":23.813,"children":[{"type":"cell","text":"商品名/条形码","align":"left","width":105.04,"x":0},{"type":"cell","text":"数量/价格","align":"left","width":105.04,"x":105.04}],"x":0},{"type":"row","autoY":0,"columnNum":2,"groupVar":"myItems","y":33.073,"children":[{"type":"cell","text":"某商品名称","var":"itemName","align":"left","width":105.04,"x":0},{"type":"cell","text":"10个","var":"itemCount","align":"left","width":105.04,"x":105.04}],"x":0},{"type":"img","autoY":0,"text":"条形码示例","width":44.979,"height":5.292,"imgEngine":"CODE_128","y":37.306,"x":0,"groupVar":"myItems","var":"itemCode"},{"type":"row","autoY":0,"columnNum":2,"groupVar":"myItems","y":38.894,"children":[{"type":"cell","align":"left","width":105.04,"x":0},{"type":"cell","text":"20元","var":"itemPrice","align":"left","width":105.04,"x":105.04}],"x":0},{"type":"line","autoY":"1","y":43.921,"groupVar":"myItems","x":0},{"type":"row","autoY":"1","columnNum":2,"y":80,"children":[{"type":"cell","text":"合计：","align":"right","width":105.04,"x":0},{"type":"cell","text":"100元","var":"sumPrice","align":"left","width":105.04,"x":105.04}],"x":0}]}
 					return tp;
 				},
 				setTp:function(){
@@ -468,9 +464,28 @@
 				},
 				lastPrint3:function(){
 					//4.在需要打印的页面构建data数据，例如：订单打印，小票打印，发票打印，以下模拟连打2条数据
-					let data=[{"title":"小票标题1","items":[{"itemName":"三九感冒灵","itemCount":"2","itemPrice":"16.80","itemCode":"123"},{"itemName":"念慈菴蜜炼川贝枇杷膏","itemCount":"3","itemPrice":"56.90","itemCode":"456"},{"itemName":"何济公阿咖酚散","itemCount":"101","itemPrice":"0.1","itemCode":"789"}],"sumPrice":213.80}];
-					console.log(data);
-					return data;
+					let baseData={logo:'testtest'};
+					console.log('baseData',baseData);
+					let data=[
+						{
+							title:"小票标题1",myItems:[
+								{itemName:"商品名称A",itemCount:2,itemPrice:16.80,itemCode:"123"},
+								{itemName:"商品名称B",itemCount:3,itemPrice:56.90,itemCode:"456"},
+								{itemName:"商品名称C",itemCount:101,itemPrice:0.1,itemCode:"789"}
+							],
+							sumPrice:213.80
+						},
+						{
+							title:"小票标题2",myItems:[
+								{itemName:"商品名称D",itemCount:2,itemPrice:13.50,itemCode:"888"},
+								{itemName:"商品名称E",itemCount:3,itemPrice:10.10,itemCode:"999"},
+							],
+							sumPrice:213.80
+						}
+					];
+					console.log('data',data);
+					//alert("准备数据已打印在控制台")
+					return [baseData,data];
 				},
 				lastPrint4:function(){
 					if(typeof desktool!='function'){
@@ -479,12 +494,14 @@
 						}
 						return ;
 					}
+					let [baseData,data]=this.lastPrint3();
 					//5.调用插件打印
 					let param={
 						jobName: "打印任务名称",
 						/* printerName:'Microsoft Print to PDF' *///不写此参数代表使用默认打印机，如果填写是指定使用当前电脑的window的Microsoft Print to PDF打印机打印。这样可以直接打成pdf看效果，顺便提醒，也支持局域网打印机
+						baseData:baseData,
 						data:data,
-						template:tp,
+						template:this.getTp(),
 					};
 					desktool('print',param);
 				},
