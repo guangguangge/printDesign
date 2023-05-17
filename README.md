@@ -59,64 +59,64 @@ desktool('powerShell2',{});//执行原生powerShell2命令并返回
 - 3.某种情况下，也可以配置成清理chrome缓存或者创建桌面快捷方式，让后通过网页调用
 
 -------------------------------------------------------
-#The following content is from google translation.
+# The following translation is provided by ChatGPT -3.5
 
-## System advantage: Zero error between the designer scale and the real printing paper! (It can be perfectly designed according to the designer scale value)
+## System Advantages: Zero Deviation Between Designer Ruler and Actual Printed Paper! (Perfect Design Based on Designer Scale Values)
 
-#Introduction to printDesign
-- ptDesign is a print designer based on HTML5
-- demo address: [https://desktool.flyscloud.com/ptDesign/index.html](https://desktool.flyscloud.com/ptDesign/index.html)
-- Printing needs to be used with desktool products
+# Introduction to printDesign
+- ptDesign is a print designer based on HTML5.
+- Demo link: [https://desktool.flyscloud.com/ptDesign/index.html](https://desktool.flyscloud.com/ptDesign/index.html)
+- Printing requires the use of desktool product.
 
-#desktoolIntroduction
+# Introduction to desktool
 
-- desktool is a plug-in based on automated operation and maintenance, monitoring, and web page printing
+- desktool is a plugin that combines automation operation and maintenance, monitoring, and web printing.
 - desktool official website: [https://desktool.flyscloud.com/](https://desktool.flyscloud.com/)
-- Currently the printing part is open source and free. We welcome your comments
+- Currently, the printing part is open source and free. Suggestions are welcome from everyone.
 
 
-#How to get started:
-- 1. Integrate the github or gitee ptDesign project into your project
-- 2. Save the template code edited by the designer to your server and database (use ptDesign.getTemplate())
-- 3. Call js to print where it needs to be printed (use desktool('print',{}) to print)
+# Getting Started::
+- 1. Integrate the ptDesign project from GitHub or Gitee into your own project.
+- 2. Save the template code edited in the designer to your server and database (using ptDesign.getTemplate()).
+- 3. Call the JavaScript print function where printing is needed (using desktool('print', {}) to print).
 
 
-`About ptDesign.js basic API`
+`Basic APIs of ptDesign.js`
 ```javascript
-ptDesign.init(data);//initialize the template
-ptDesign.setTheme(data);//set skin
-ptDesign.getTemplate();//Get the designed template
-ptDesign.setTemplate(data);//Initialize editor template
-ptDesign.setSize(width,height);//Set paper width and height
-ptDesign.setBgImage(url);//Set template background
-ptDesign.clearBgImage();//Delete template background
-ptDesign.clear();//Delete all elements
+ptDesign.init(data); // Initialize the template
+ptDesign.setTheme(data); // Set the skin
+ptDesign.getTemplate(); // Get the designed template
+ptDesign.setTemplate(data); // Initialize the editor template
+ptDesign.setSize(width, height); // Set the paper width and height
+ptDesign.setBgImage(url); // Set the template background
+ptDesign.clearBgImage(); // Remove the template background
+ptDesign.clear(); // Remove all elements
 ```
 
 --------------------------------------------
-# How to implement web page printing
-* 1. To use the printing function, please download desktool.exe from the official website first
+# How to Implement Web Printing
+* 1. To use the printing function, please download desktool.exe from the official website first.
 * 2. Download link: [https://desktool.flyscloud.com/download.html](https://desktool.flyscloud.com/download.html)
-* 3. All printing functions can be used in the current free version
-* 4. Start desktool.exe on windows
-* 5. Introduce js into the webpage ```<script async type="text/javascript" src="http://localhost:11027/desktool.js"></script>```
-* 6. Use desktool('print',{}) to print
+* 3. The free version currently supports all printing functions.
+* 4. Start desktool.exe on Windows/linux.
+* 5. Include the JavaScript in the web page: `<script async type="text/javascript" src="http://localhost:11027/desktool.js"></script>`
+* 6. Use desktool('print', {}) to print.
 
-`Tips: When desktool.exe starts normally, windows will open port 11027 locally, please import this js (ie: localhost:11027/desktool.js) to realize native printing`
+`Tip: When desktool.exe starts normally, Windows will open port 11027 locally. Please include this JavaScript (i.e., localhost:11027/desktool.js) to achieve native printing.`
 
 
-# Others, about the api of desktool.exe
+# Others, API for desktool.exe
 desktool js demo: [https://desktool.flyscloud.com/example.html](https://desktool.flyscloud.com/example.html)
 Main APIs:
 ```javascript
-desktool('print',{});//Use native printing (no pop-up window, continuous typing, high performance.)
-desktool('get',{mem:{},cpu:{},disk:{},network{});//Return the performance parameters of the windows, memory, cpu, hard disk read and write, network bandwidth
-desktool('get',{printer:{});//return all printers on this windows
-desktool('screenshot',{scale:0.8});//Screenshot, (scale PNG image according to 0.8 times)
-desktool('powerShell1',{});//Execute the native powerShell1 command and return
-desktool('powerShell2',{});//Execute the native powerShell2 command and return
+desktool('print', {}); // Use native printing (no pop-ups, can print continuously, high performance)
+desktool('get', { mem: {}, cpu: {}, disk: {}, network{}}); // Return performance parameters of this Windows system: memory, CPU, disk read/write, network bandwidth
+desktool('get', { printer: {}); // Return all printers on this Windows system
+desktool('screenshot', { scale: 0.8 }); // Take a screenshot of the screen (PNG image scaled by 0.8)
+desktool('powerShell1', {}); // Execute native PowerShell1 command and return the result
+desktool('powerShell2', {}); // Execute native PowerShell2 command and return the result
 ```
-`Tips: powerShell 1 or 2, for security reasons, does not support calling parameters, and can only be configured and initialized in config.txt, powerShell commands can solve some of the following scenarios`
-- 1. Fruit shop, fresh store, get the value of the usb scale through js (you can configure the script of powerShell1 to get the usb scale and return it to the webpage)
-- 2. The windows computer is connected to some special usb devices, ID card readers, multi-cameras, fingerprints, etc.
-- 3. In some cases, it can also be configured to clear the chrome cache or create a desktop shortcut, and then call it through the web page
+`Tip: For security reasons, powerShell 1 or 2 does not support calling with parameters. You can only configure it in config.txt for initialization. PowerShell commands can solve the following scenarios:`
+- 1. For fruit stores or fresh food stores, retrieve the values from a USB weighing scale using JavaScript (you can configure the PowerShell1 script to retrieve the values from a USB weighing scale and return them to the web page).
+- 2. If a Windows computer is equipped with special USB devices such as ID card readers, multiple cameras, or fingerprint scanners, you can retrieve the values using native PowerShell and return them to the web page.
+- 3. In certain situations, you can also configure it to clear the Chrome cache or create desktop shortcuts, and then call them through the web page.
