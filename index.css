@@ -109,7 +109,6 @@ div::-webkit-scrollbar-thumb {
   background-color: rgba(238, 238, 238, 0.5);
 }
 .out_wrapper {
-  border: 1px solid #eee;
   height: 100vh;
   position: relative;
   overflow: hidden;
