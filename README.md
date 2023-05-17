@@ -75,7 +75,7 @@ desktool('powerShell2',{});//执行原生powerShell2命令并返回
 - Currently, the printing part is open source and free. Suggestions are welcome from everyone.
 
 
-# Getting Started::
+# Getting Started
 - 1. Integrate the ptDesign project from GitHub or Gitee into your own project.
 - 2. Save the template code edited in the designer to your server and database (using ptDesign.getTemplate()).
 - 3. Call the JavaScript print function where printing is needed (using desktool('print', {}) to print).
@@ -110,7 +110,7 @@ desktool js demo: [https://desktool.flyscloud.com/example.html](https://desktool
 Main APIs:
 ```javascript
 desktool('print', {}); // Use native printing (no pop-ups, can print continuously, high performance)
-desktool('get', { mem: {}, cpu: {}, disk: {}, network{}}); // Return performance parameters of this Windows system: memory, CPU, disk read/write, network bandwidth
+desktool('get', { mem: {}, cpu: {}, disk: {}, network:{}}); // Return performance parameters of this Windows system: memory, CPU, disk read/write, network bandwidth
 desktool('get', { printer: {}); // Return all printers on this Windows system
 desktool('screenshot', { scale: 0.8 }); // Take a screenshot of the screen (PNG image scaled by 0.8)
 desktool('powerShell1', {}); // Execute native PowerShell1 command and return the result
