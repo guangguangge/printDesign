@@ -58,3 +58,65 @@ desktool('powerShell2',{});//执行原生powerShell2命令并返回
 - 2.windows电脑接入了一些特殊usb设备，身份证读卡器，多摄像头，指纹等（可以通过原生powerShell获取值，给到网页返回）
 - 3.某种情况下，也可以配置成清理chrome缓存或者创建桌面快捷方式，让后通过网页调用
 
+-------------------------------------------------------
+#The following content is from google translation.
+
+## System advantage: Zero error between the designer scale and the real printing paper! (It can be perfectly designed according to the designer scale value)
+
+#Introduction to printDesign
+- ptDesign is a print designer based on HTML5
+- demo address: [https://desktool.flyscloud.com/ptDesign/index.html](https://desktool.flyscloud.com/ptDesign/index.html)
+- Printing needs to be used with desktool products
+
+#desktoolIntroduction
+
+- desktool is a plug-in based on automated operation and maintenance, monitoring, and web page printing
+- desktool official website: [https://desktool.flyscloud.com/](https://desktool.flyscloud.com/)
+- Currently the printing part is open source and free. We welcome your comments
+
+
+#How to get started:
+- 1. Integrate the github or gitee ptDesign project into your project
+- 2. Save the template code edited by the designer to your server and database (use ptDesign.getTemplate())
+- 3. Call js to print where it needs to be printed (use desktool('print',{}) to print)
+
+
+`About ptDesign.js basic API`
+```javascript
+ptDesign.init(data);//initialize the template
+ptDesign.setTheme(data);//set skin
+ptDesign.getTemplate();//Get the designed template
+ptDesign.setTemplate(data);//Initialize editor template
+ptDesign.setSize(width,height);//Set paper width and height
+ptDesign.setBgImage(url);//Set template background
+ptDesign.clearBgImage();//Delete template background
+ptDesign.clear();//Delete all elements
+```
+
+--------------------------------------------
+# How to implement web page printing
+* 1. To use the printing function, please download desktool.exe from the official website first
+* 2. Download link: [https://desktool.flyscloud.com/download.html](https://desktool.flyscloud.com/download.html)
+* 3. All printing functions can be used in the current free version
+* 4. Start desktool.exe on windows
+* 5. Introduce js into the webpage ```<script async type="text/javascript" src="http://localhost:11027/desktool.js"></script>```
+* 6. Use desktool('print',{}) to print
+
+`Tips: When desktool.exe starts normally, windows will open port 11027 locally, please import this js (ie: localhost:11027/desktool.js) to realize native printing`
+
+
+# Others, about the api of desktool.exe
+desktool js demo: [https://desktool.flyscloud.com/example.html](https://desktool.flyscloud.com/example.html)
+Main APIs:
+```javascript
+desktool('print',{});//Use native printing (no pop-up window, continuous typing, high performance.)
+desktool('get',{mem:{},cpu:{},disk:{},network{});//Return the performance parameters of the windows, memory, cpu, hard disk read and write, network bandwidth
+desktool('get',{printer:{});//return all printers on this windows
+desktool('screenshot',{scale:0.8});//Screenshot, (scale PNG image according to 0.8 times)
+desktool('powerShell1',{});//Execute the native powerShell1 command and return
+desktool('powerShell2',{});//Execute the native powerShell2 command and return
+```
+`Tips: powerShell 1 or 2, for security reasons, does not support calling parameters, and can only be configured and initialized in config.txt, powerShell commands can solve some of the following scenarios`
+- 1. Fruit shop, fresh store, get the value of the usb scale through js (you can configure the script of powerShell1 to get the usb scale and return it to the webpage)
+- 2. The windows computer is connected to some special usb devices, ID card readers, multi-cameras, fingerprints, etc.
+- 3. In some cases, it can also be configured to clear the chrome cache or create a desktop shortcut, and then call it through the web page
