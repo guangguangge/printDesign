@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打印设计器</title>
+    <link rel="stylesheet" href="./js/jquery-ui.min.css" />
+    <link rel="stylesheet" href="./index.css">
+	<link rel="stylesheet" href="./iconfont/iconfont.css">        
+    <script src="./js/jquery.js"></script>
+    <script src="./js/jquery-ui.min.js"></script>
+	<style id="baseStyle" type="text/css">
+		:root {
+			--themeColor1:unset;/* 主色 */
+			--themeColor2:unset;;/* 反色 */
+			--baseLine-borderTopStyle:unset;
+			--baseRow-fontFamily:unset;
+			--baseRow-fontSize:unset;
+			--baseRow-fontWeight:unset;
+			--baseImg-backgroundSize:unset;
+		}
+		.baseLine{
+			border-top-style: var(--baseLine-borderTopStyle);
+		}
+		.baseRow{
+			font-family: var(--baseRow-fontFamily);
+			font-size: var(--baseRow-fontSize);
+			font-weight:var(--baseRow-fontWeight);
+		}
+		.baseImg{
+			background-size: var(--baseImg-backgroundSize);
+		}
+		.baseTitle{
+			background-color: var(--themeColor1);
+			color: var(--themeColor2);			
+		}
+	</style>
+</head>
+<body>
+    <div class="out_wrapper">
+        <!-- 缩放按钮 -->
+		<div class="slider_wrap disableSelect">
+			<div class="btn" onclick="ptDesign.scaleChange(.1)">+</div>
+			<div class="btn" onclick="ptDesign.scaleChange(-.1)">-</div>
+		</div> 
+        <!-- 内容区域 -->
+        <div class="content_wrapper">
+            <div class="left_content disableSelect">
+                <div class="left_top">
+					<div class="title baseTitle"> <i class="iconfont icon-huizhi"></i>创建元素</div>
+					<div id="lineCreator" class="left_top_item">
+						<div class="iconfont icon-hr"></div>
+						<div class="txt">线</div>
+					</div>
+					<div id="tableCreator" class="left_top_item">
+						<div class="iconfont icon-tx-changfangxing"></div>
+						<div class="txt">行</div>
+					</div>
+					<div id="imgCreator" class="left_top_item">
+						<div class="iconfont icon-tupian"></div>
+						<div class="txt">图</div>
+					</div>
+				</div>
+				
+				<div class="left_bottom">
+					<div class="title baseTitle"><i class="iconfont icon-liebiao"></i>现有元素</div>
+					<div class="item_list" id="sortable_list">
+						<!-- the left items-->
+					</div>
+				</div>
+            </div>
+            <div class="center_content">
+                
+                <div id="targetbox" class="disableSelect">
+                    <!-- 获取元素的时候要把尺子去除 -->
+                    <div id="rulerX" class="ruler">
+                        <img src="./images/rulerX.png" class="ruler_img" alt="">
+                    </div>
+                    <div id="rulerY" class="ruler">
+                        <img src="./images/rulerY.png" class="ruler_img" alt="">
+                    </div>
+                </div> 
+            
+            </div>
+            <div class="right_content">
+				<div class="right_list" id="base_edit_tool">
+					<div class="tool_title baseTitle">
+						<div class="iconfont icon-shezhi"></div>
+						<span>全局配置</span>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">纸张宽度(mm)</span>
+					    <input name="width" readonly disabled>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">纸张高度(mm)</span>
+					    <input name="height" readonly disabled>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">线条样式</span>
+					    <select name="lineType" onchange="ptDesign.setFieldBase({lineType:this.value})">
+					        <option value="solid">实线</option>
+					        <option value="dashed">虚线</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">文字字体</span>
+					    <select name="fontFamily" onchange="ptDesign.setFieldBase({fontFamily:this.value})">
+							<option value="Arial">Arial</option>
+					        <option value="Microsoft YaHei">微软雅黑</option>
+					        <option value="SimSun">宋体</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">文字大小</span>
+					    <input name="fontSize" type="number" onchange="ptDesign.setFieldBase({fontSize:this.value})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">文字加粗</span>
+					    <select name="fontWeight" onchange="ptDesign.setFieldBase({fontWeight:this.value})">
+					        <option value="normal">否</option>
+					        <option value="bold">是</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">文字换行</span>
+					    <select name="fontWrap" onchange="ptDesign.setFieldBase({fontWrap:parseInt(this.value)})">
+					        <option value="1">超出截断</option>
+					        <option value="2">自动换行</option>
+							<option value="3">缩小适应</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">图片展示</span>
+					    <select name="imgModel" onchange="ptDesign.setFieldBase({imgModel:parseInt(this.value)})">
+					        <option value="1">完整比例</option>
+					        <option value="2">拉伸长宽</option>
+							<option value="3">最小裁剪</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">缓存模式</span>
+					    <select name="imgCache" onchange="ptDesign.setFieldBase({imgCache:parseInt(this.value)})">
+					        <option value="0">否</option>
+					        <option value="1">是</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">紧贴元素时高度间距(mm)</span>
+					    <input name="wrapY" type="number" onchange="ptDesign.setBase({wrapY:parseInt(this.value)})">
+					</div>
+				</div>
+                <div class="right_list" id="line_edit_tool">
+					<div class="tool_title baseTitle">
+						<div class="iconfont icon-hr"></div>
+						<span>线条配置</span>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">Y位置(mm)</span>
+					    <input name="y" min="0" type="number" oninput="ptDesign.setFieldByActive({y:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">紧跟上一个元素</span>
+					    <select name="autoY" onchange="ptDesign.setFieldByActive({autoY:this.value})">
+					        <option value="1">是</option>
+					        <option value="0">否</option>
+					    </select>
+					</div>
+                    <div class="right_item">
+                        <span class="item_name">线条样式</span>
+                        <select name="lineType" onchange="ptDesign.setFieldByActive({lineType:this.value})">
+							<option value="">使用全局</option>
+                            <option value="solid">实线</option>
+                            <option value="dashed">虚线</option>
+                        </select>
+                    </div>
+                    <div class="right_item flex">
+					    <span class="item_name">组变量</span>
+					    <input name="groupVar" type="text" oninput="ptDesign.setFieldByActive({groupVar:this.value})">
+					</div>
+					<div class="right_item">
+						<button class="delete" onclick="ptDesign.deleteActiveDom()">删除</button>
+					</div>
+                </div>
+                <div class="right_list" id="table_edit_tool">
+					<div class="tool_title baseTitle">
+						<div class="iconfont icon-tx-changfangxing"></div>
+						<span>行配置</span>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">Y位置(mm)</span>
+					    <input name="y" min="0" type="number" oninput="ptDesign.setFieldByActive({y:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">紧跟上一个元素</span>
+					    <select name="autoY" onchange="ptDesign.setFieldByActive({autoY:this.value})">
+					        <option value="1">是</option>
+					        <option value="0">否</option>
+					    </select>
+					</div>
+                    <div class="right_item flex">
+                        <span class="item_name">列数</span>
+						<input name="columnNum" id="table_colum_num" type="number" min="1" onchange="ptDesign.setFieldByActive({columnNum:parseInt(this.value)})">
+                    </div>
+                    <div class="right_item flex">
+					    <span class="item_name">组变量</span>
+					    <input name="groupVar" type="text" oninput="ptDesign.setFieldByActive({groupVar:this.value})">
+					</div>
+					<div class="right_item">
+						<button class="delete" onclick="ptDesign.deleteActiveDom()">删除</button>
+					</div>
+                    <!-- <hr style="margin:20px 0"/> -->
+                    <div id="table_colunm_style">
+						<div class="tool_title baseTitle">
+							<div class="iconfont icon-icon-test"></div>
+							<span>列配置</span>
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">列宽(mm)</span>
+						    <input name="width" min="0" type="number" oninput="ptDesign.setFieldCellByActive({width:parseFloat(this.value)})">
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">内容</span>
+						    <input name="text" type="text" oninput="ptDesign.setFieldCellByActive({text:this.value})">
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">居中</span>
+						    <select name="align" onchange="ptDesign.setFieldCellByActive({align:this.value})">
+						        <option value="left">左</option>
+						        <option value="center">中</option>
+						        <option value="right">右</option>
+						    </select>
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">文字字体</span>
+						    <select name="fontFamily" onchange="ptDesign.setFieldCellByActive({fontFamily:this.value})">
+								<option value="">使用全局</option>
+								<option value="Arial">Arial</option>
+						        <option value="Microsoft YaHei">微软雅黑</option>
+						        <option value="SimSun">宋体</option>
+						    </select>
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">文字大小</span>
+						    <input name="fontSize" type="number" onchange="ptDesign.setFieldCellByActive({fontSize:this.value})">
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">文字加粗</span>
+						    <select name="fontWeight" onchange="ptDesign.setFieldCellByActive({fontWeight:this.value})">
+								<option value="">使用全局</option>
+						        <option value="normal">否</option>
+						        <option value="bold">是</option>
+						    </select>
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">文字换行</span>
+						    <select name="fontWrap" onchange="ptDesign.setFieldCellByActive({fontWrap:parseInt(this.value)})">
+								<option value="">使用全局</option>
+						        <option value="1">超出截断</option>
+						        <option value="2">自动换行</option>
+								<option value="3">缩小适应</option>
+						    </select>
+						</div>
+						<div class="right_item flex">
+						    <span class="item_name">变量</span>
+						    <input name="var" type="text" oninput="ptDesign.setFieldCellByActive({var:this.value})">
+						</div>
+                    </div>
+                </div>
+				<div class="right_list" id="img_edit_tool">
+					<div class="tool_title baseTitle">
+						<div class="iconfont icon-tupian"></div>
+						<span>图片配置</span>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">X位置(mm)</span>
+					    <input name="x" min="0" type="number" oninput="ptDesign.setFieldByActive({x:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">Y位置(mm)</span>
+					    <input name="y" min="0" type="number" oninput="ptDesign.setFieldByActive({y:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">宽度(mm)</span>
+					    <input name="width" min="0" type="number" oninput="ptDesign.setFieldByActive({width:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">高度(mm)</span>
+					    <input name="height" min="0" type="number" oninput="ptDesign.setFieldByActive({height:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">紧跟上一个元素</span>
+					    <select name="autoY" onchange="ptDesign.setFieldByActive({autoY:this.value})">
+					        <option value="1">是</option>
+					        <option value="0">否</option>
+					    </select>
+					</div>
+                    <div class="right_item flex">
+						<span class="item_name">内容</span>
+						<input name="text" type="text" oninput="ptDesign.setFieldByActive({text:this.value})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">图片展示</span>
+					    <select name="imgModel" onchange="ptDesign.setFieldByActive({imgModel:parseInt(this.value)})">
+							<option value="">使用全局</option>
+					        <option value="1">完整比例</option>
+					        <option value="2">拉伸长宽</option>
+							<option value="3">最小裁剪</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">缓存模式</span>
+					    <select name="imgCache" onchange="ptDesign.setFieldByActive({imgCache:parseInt(this.value)})">
+							<option value="">使用全局</option>
+					        <option value="0">否</option>
+					        <option value="1">是</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">图片引擎</span>
+					    <select name="imgEngine" onchange="ptDesign.setFieldByActive({imgEngine:this.value})">
+							<option value="NORMAL">无</option>
+							<option value="QR_CODE">转二维码</option>
+							<option value="CODE_128">转条形码</option>
+					    </select>
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">组变量</span>
+					    <input name="groupVar" type="text" oninput="ptDesign.setFieldByActive({groupVar:this.value})">
+					</div>
+					<div class="right_item flex">
+						<span class="item_name">变量</span>
+						<input name="var" type="text" oninput="ptDesign.setFieldByActive({var:this.value})">
+					</div>
+					<div class="right_item">
+						<button class="delete" onclick="ptDesign.deleteActiveDom()">删除</button>
+					</div>
+                </div>
+            </div>
+        </div>
+		<!-- 可以将以下代码删除-->
+        <div id="tips_wrapper">
+            <div class="tips_title">TIPS</div>
+            <div class="tips_content">
+				<div class="tip">在线样例（注意：若您接入后，请删除这个TIPS）</div>
+				<br>
+				<div><b>引入步骤：</b></div>
+				<div class="tips_item">1. 在您的系统中引入此网页源代码</div>
+				<div class="tips_item">2. 参考下面API“初始化模板”和“提取模板结果”，接入到您的系统</div>
+				<div class="tips_item">3. 在需要打印的地方，使用代码desktool('print',{...})</div>
+				<div class="tips_item">4. 当所有API已熟悉，请再次看一下<a target="_blank" href="../printerdesignhelp.html">全参数注解</a></div>
+				<br>
+				<div><b>此页面API：</b></div>
+				<div class="tips_item">2. 改变皮肤 <button onclick="ptDemo.setTheme({color1:'#27ae60',color2:'#FFFFFF'});">皮肤1</button> <button onclick="ptDemo.setTheme({color1:'#9b59b6',color2:'#FFFFFF'});">皮肤2</button> <button onclick="ptDemo.setTheme({color1:'#dc2a0b',color2:'#FFFFFF'});">皮肤3</button></div>
+				<div class="tips_item">2. 初始化模板 <button onclick="ptDemo.setTp();">点击这里</button></div>
+				<div class="tips_item">3. 缩放画布 <button onclick="ptDemo.scale(+0.1);">+</button> <button onclick="ptDemo.scale(-0.1);">-</button></div>
+				<div class="tips_item">4. 清空模板 <button onclick="ptDemo.clear();">点击这里</button></div>
+				<div class="tips_item">5. 设置为A4大小 <button onclick="ptDemo.setA4();">点击这里</button></div>
+				<div class="tips_item">6. 设置为小票（58毫米）大小 <button onclick="ptDemo.setTicket();">点击这里</button></div>
+				<div class="tips_item">7. 设置为发票大小+背景图 <button onclick="ptDemo.setTicketAndImg();">点击这里</button></div>
+				<div class="tips_item">8. 删除模板背景 <button onclick="ptDemo.clearImg();">点击这里</button></div>
+				<div class="tips_item">9. 提取模板结果 <button onclick="ptDemo.getTemplate();">点击这里</button></div>
+				<div class="tips_item">10. 打印当前模板 <button onclick="ptDemo.print();">默认打印机静默打印（推荐）</button> <button onclick="ptDemo.print(true);">选择打印</button></div>
+				<div class="tips_item">11.完整示例：一键设置模板+提取模板+模拟数据+分页打印</div>
+				<div class="tips_item">
+					<button onclick="ptDemo.lastPrint1();">1.设置模板</button> 
+					<button onclick="ptDemo.lastPrint2();">2.提取模板</button> 
+					<button onclick="ptDemo.lastPrint3();">3.模拟数据</button> 
+					<button onclick="ptDemo.lastPrint4();">4.分页打印</button> 
+				</div>
+				<div class="tips_item">其他注解：</div>
+				<div class="tips_item">1. 页面高度auto表示，打印如果超出则不截断限制，例如购物小票</div>
+				<div class="tips_item">2. 数据中变量分为普通变量和数组变量，例如上面案例“完整示例”的var属性name和myList[]数组</div>
+				<div class="tips_item">3. “行”的属性“紧跟元素”代表以上个元素高度为准，当为“是”的时候，拖拽的纵坐标Y是不生效的</div>
+				<div class="tips_item">4. 就是说当使用了数组变量，数组的“行”的高度根据数组数据变长拉伸，因此后续“行”请使用“紧跟元素”</div>
+				<div class="tips_item">5. 本系统已做到精准控制！编辑器的标尺，就是真实打印的纸张单位</div>
+            </div>
+           
+            <div class="tips_close" onclick="ptDemo.closeTips()">×</div>
+        </div>
+		<script async type="text/javascript" src="http://localhost:11027/desktool.js?name=desktool&callback=ptDemo.onDesktoolInit"></script>
+		<script type="text/javascript">
+			$(function(){
+				// 操作提示栏
+				$("#tips_wrapper").css({
+					top : `10%`,
+					right : `calc(15px + ${document.getElementsByClassName('right_content')[0].offsetWidth}px)`
+				});
+				$("#tips_wrapper").draggable({
+					containment: ".out_wrapper",
+					handle:".tips_title",
+				});	
+			})
+			let ptDemo={
+				logoBase64:null,
+				onDesktoolInit:function(){
+					desktool('getLogo').then(r=>ptDemo.logoBase64=r.data);
+				},
+				setTheme:function(themeColors){
+					ptDesign.setTheme(themeColors);
+				},
+				getTp:function(){
+					let tp={"width":210,"height":"auto","wrapY":5,"baseField":{"lineType":"dashed","fontFamily":"Arial","fontSize":9,"fontWrap":1,"imgModel":2,"imgCache":1},"theme":{"color1":"#3498db","color2":"#ffffff"},"autoHeight":1,"fields":[{"type":"row","autoY":0,"columnNum":1,"y":0,"children":[{"type":"cell","text":"AA\rCCC\rDDDDD","align":"left","width":57.944,"x":0}],"x":0},{"type":"row","autoY":1,"columnNum":2,"groupVar":"items","y":15.346,"children":[{"type":"cell","text":"BBCC","var":"itemName","align":"left","width":10,"x":0},{"type":"cell","text":"BBCC","var":"itemCount","fontSize":20,"align":"left","width":10,"x":10}],"x":0},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"123","width":10,"height":5,"imgEngine":"CODE_128","y":15.346,"x":25},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"4444","width":10,"height":5,"imgEngine":"QR_CODE","y":35,"x":5},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"5555555","width":20,"height":15,"imgEngine":"CODE_128","y":35,"x":20},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"66666","width":5,"height":5,"imgEngine":"CODE_128","y":35,"x":50},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"777777","width":25,"height":5,"imgEngine":"CODE_128","y":70,"x":0},{"type":"img","autoY":1,"groupVar":"items","var":"itemCode","text":"8888888","width":25,"height":5,"imgEngine":"CODE_128","y":70,"x":100},{"type":"img","autoY":1,"text":"123","width":20,"height":10,"imgEngine":"CODE_128","y":100.046,"x":0}]}
+					return tp;
+				},
+				setTp:function(){
+					ptDesign.setTemplate(this.getTp());
+					alert('已将模板初始化，其中宽度为58mm高度为自适应，并添加了几个字段');
+				},
+				scale:function(num){
+					ptDesign.scaleChange(num);
+				},
+				clear:function(){
+					ptDesign.clear();
+					alert('已将模板内元素全部删除');
+				},
+				setA4:function(){
+					ptDesign.setSize(210,297);
+					alert('已将模板设置为A4的210mm x 297mm');
+				},
+				setTicket:function(){
+					ptDesign.setSize(58,'auto');
+					alert('已将模板设置为超市下票的的58mm x auto高度');
+				},
+				setTicketAndImg:function(){
+					ptDesign.setSize(240,140);
+					alert('已将模板设置为发票的240mm x 140mm');
+					ptDesign.setBgImage('images/ticketBg.jpg');
+					alert('已添加模板背景');
+				},
+				clearImg:function(){
+					ptDesign.clearBgImage();
+					alert('已删除模板背景');
+				},
+				getTemplate:function(){
+					let template=ptDesign.getTemplate();
+					console.log(template);
+					alert('已拿到模板配置文件，请按F12看console控制台');
+				},
+				print:function(chooseDialog){
+					if(typeof desktool!='function'){
+						if(confirm('您没有下载打印插件，是否去官网下载？')){
+							window.location.href='https://desktool.flyscloud.com/download.html';
+						}
+						return ;
+					}
+					let param={
+						jobName: "打印任务名称",
+						choose:chooseDialog?1:0,//当为1时，弹出窗口。生产环境一般用0
+						/* printerName:'Microsoft Print to PDF' *///不写此参数代表使用默认打印机，如果填写是指定使用当前电脑的window的Microsoft Print to PDF打印机打印。这样可以直接打成pdf看效果，顺便提醒，也支持局域网打印机
+						data:[{}],//打印一条数据
+						template:ptDesign.getTemplate()
+					};
+					console.log(param);
+					desktool('print',param);
+				},
+				lastPrint1:function(){
+					let tp=this.getTp();
+					ptDesign.setTemplate(tp);//1.设置模板（此场景应用在您的web系统“进入编辑模板页面”）
+					alert('模版已设置');
+				},
+				lastPrint2:function(){
+					let template=ptDesign.getTemplate();//2.从设计器中取出模板,（此场景应用在您的web系统“模板已设计完成，点击提交”）
+					console.log(template);
+					alert('已拿到模板配置文件，请按F12看console控制台');
+					//3.请将template内容保存到您的服务器或数据库 ajax fetch() $.post等
+				},
+				lastPrint3:function(){
+					//4.在需要打印的页面构建data数据，例如：订单打印，小票打印，发票打印，以下模拟连打2条数据
+					let data=[{"title":"小票标题1","items":[{"itemName":"三九感冒灵","itemCount":"2","itemPrice":"16.80","itemCode":"123"},{"itemName":"念慈菴蜜炼川贝枇杷膏","itemCount":"3","itemPrice":"56.90","itemCode":"456"},{"itemName":"何济公阿咖酚散","itemCount":"101","itemPrice":"0.1","itemCode":"789"}],"sumPrice":213.80}];
+					console.log(data);
+					return data;
+				},
+				lastPrint4:function(){
+					if(typeof desktool!='function'){
+						if(confirm('您没有下载打印插件，是否去官网下载？')){
+							window.location.href='https://desktool.flyscloud.com/download.html';
+						}
+						return ;
+					}
+					//5.调用插件打印
+					let param={
+						jobName: "打印任务名称",
+						/* printerName:'Microsoft Print to PDF' *///不写此参数代表使用默认打印机，如果填写是指定使用当前电脑的window的Microsoft Print to PDF打印机打印。这样可以直接打成pdf看效果，顺便提醒，也支持局域网打印机
+						data:data,
+						template:tp,
+					};
+					desktool('print',param);
+				},
+				closeTips:function(){
+					$('#tips_wrapper').remove();
+				},
+			}
+		</script>
+		<!-- 以上代码全为示例代码，请删除ptDemo部分 -->
+    </div>
+    
+</body>
+
+<script>
+	let ptDesign={
+		
+		targetbox:document.querySelector('#targetbox'), // 小票容器盒子
+		scaleBox:document.getElementsByClassName('slider_wrap')[0], // 缩放工具
+		rulerX:document.querySelector('#rulerX'), // 横向刻度尺
+		rulerY:document.querySelector('#rulerY'), // 纵向刻度尺
+		centerBox:document.getElementsByClassName('center_content')[0], //中间容器盒子
+		
+		
+		baseEditTool:document.querySelector('#base_edit_tool'), // 右侧Base工具盒子
+		lineEditTool:document.querySelector('#line_edit_tool'), // 右侧线条工具盒子
+		tableEditTool:document.querySelector('#table_edit_tool'), // 右侧表格工具盒子
+		tableColumNumIpt:document.querySelector('#table_colum_num'), // 表格列数输入框
+		tableColumStyle:document.querySelector('#table_colunm_style'), // 表格列样式盒子
+		imgEditTool:document.querySelector('#img_edit_tool'), // 右侧工具盒子		
+		
+		scaleRatio:1, // 缩放比例，默认为1
+		
+		lastClickDom:null,//最后一个点击的元素
+		
+		resizeObserver:new ResizeObserver(entries=>{
+			for (let entry of entries) {
+				ptDesign.setOption(entry.target,{
+					width:ptDesign.pxToMm(entry.target.offsetWidth),
+					x:ptDesign.pxToMm(entry.target.offsetLeft)
+				})
+			}
+		}),
+				
+		dpi:null,//浏览器dpi
+		idCounter:1,//id自增计数器
+		
+		lineAppendData:{type:'line',autoY:0,lineType:'',groupVar:''},
+		rowAppendData:{type:'row',autoY:0,columnNum:1,groupVar:''},
+		cellAppendData:{type:'cell',text:'',var:'',align:'left',fontSize:'',fontFamily:'',fontWeight:'',fontWrap:''},
+		imgAppendData:{type:'img',autoY:0,text:'',var:'',width:20,height:15,imgModel:'',imgCache:'',imgEngine:'NORMAL',groupVar:''},
+		
+		init:function(option){
+			
+			// 初始化内容区域的高度、缩放按钮位置
+			document.getElementsByClassName('content_wrapper')[0].style.height = `100%`
+			this.scaleBox.style.top = `8px`
+			this.scaleBox.style.left = `calc(8px + ${document.getElementsByClassName('left_content')[0].offsetWidth}px)`
+			
+			// 监听鼠标滚轮,放大/缩小小票
+			$("#targetbox").on('wheel', (e)=>{
+			    e.preventDefault();
+			    var delta = e.originalEvent.deltaY;
+			    if (delta < 0) {
+			        this.scaleChange(+.1)
+			    } else {
+			        this.scaleChange(-.1)
+			    }
+			});
+
+			// 左下列表可排序
+			$( "#sortable_list" ).sortable({
+				
+			});
+			$( "#sortable_list" ).on('mousedown','.element_item',(e)=>{
+				let dom;
+				if(this.haveClassName(e.target,'element_item')){
+					dom=event.target;
+				}else{
+					dom=$(event.target).closest('.element_item')[0]
+				}
+				$('.field[data-id="'+dom.dataset.id+'"]').click();
+			})
+
+			// 线条按钮drag事件
+			$( "#lineCreator" ).draggable({
+			    helper: function(event){
+			        return $(`<div style='width:${document.querySelector('#targetbox').offsetWidth}px;border:1px dashed #000'></div>`)
+			    },
+			    cursorAt:{ top: 0, left: 0 },
+			    opacity:0.5,
+			    appendTo:'#targetbox',
+			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
+			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
+					ui.position.top = Math.round(ui.position.top / this.scaleRatio);                    
+			    },
+			});
+			// 表格按钮drag事件
+			$( "#tableCreator" ).draggable({
+			    helper: function(event){
+			        return $(`<div style="width:${document.querySelector('#targetbox').offsetWidth}px;height:20px;border:1px dashed #000"></div>`)
+			    },
+			    cursorAt:{ top: 0, left: 0 },
+			    opacity:0.5,
+			    appendTo:'#targetbox',
+			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
+			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
+					ui.position.top = Math.round(ui.position.top / this.scaleRatio); 
+			    },
+			});
+			// 图片按钮drag事件
+			$( "#imgCreator" ).draggable({
+			    helper: function(event){
+			        return $(`<div class="iconfont icon-tupian" style="color:var(--themeColor1);font-size:60px"></div>`)
+			    },
+			    cursorAt:{ top: 0, left: 0 },
+			    opacity:0.5,
+			    appendTo:'#targetbox',
+			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
+			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
+					ui.position.top = Math.round(ui.position.top / this.scaleRatio);                    
+			    },
+			});
+
+			$( "#targetbox" ).draggable({
+			    cancel:'.line_style, .table_style, .img_style, .handler_style',
+			})
+			
+			
+			// drop生成元素
+			$( "#targetbox" ).droppable({
+			    accept:'.left_top div,#targetbox div',
+			    activeClass: "bg-active",
+			    drop:( event, ui)=>{
+			        let currentDom
+			        let dragDom = ui.draggable[0]
+			        var targetboxHeight = this.targetbox.clientHeight;
+			        if(dragDom.id == 'lineCreator'){  // 创建线条元素
+			            if(ui.position.top > targetboxHeight){
+			                return;
+			            }
+						let temp={...this.lineAppendData};
+						temp.y=this.pxToMm(ui.position.top);
+			            currentDom = this.createLine(temp);
+			        }else if(dragDom.id == 'tableCreator'){ // 创建表格元素
+			            if(ui.position.top > targetboxHeight){
+			                return;
+			            }
+						let temp={...this.rowAppendData};
+						temp.y=this.pxToMm(ui.position.top);
+						let array=[];
+						for(let i=0;i<this.rowAppendData.columnNum;i++){
+							array.push({...this.cellAppendData});
+						}
+						temp.children=array;
+			            currentDom = this.createTable(temp);
+			        }else if(dragDom.id == 'imgCreator'){  // 创建图片
+			            if(ui.position.top > targetboxHeight){
+			                return;
+			            }
+						let temp={...this.imgAppendData};
+						temp.y=this.pxToMm(ui.position.top);
+						temp.x=this.pxToMm(ui.position.left);
+			            currentDom = this.createImg(temp);
+			        }else{ // 其他元素drop
+			            currentDom = dragDom
+			        }
+			        this.renderDraggable();
+			        this.setActiveDom(currentDom);
+					$(currentDom).click();//模拟走一次click事件，目的是显示面板
+			        // this.chooseDomByClick()
+			  }
+			});
+			//绑定键盘事件
+			$(document).keydown((event)=>{
+				if(event.keyCode===46){//删除键
+					this.deleteActiveDom();
+				}
+			})
+			$('#targetbox,.center_content').bind('click',(event)=>{
+				if(event.target===this.targetbox||event.target===this.centerBox){
+					this.removeActiveDom();
+					this.baseEditTool.style.display = 'block'
+					this.tableEditTool.style.display = 'none'
+					this.lineEditTool.style.display = 'none'
+					this.imgEditTool.style.display = 'none'
+				}
+			})
+			$(this.centerBox).click();
+			
+			this.setTemplate(option)
+		},
+		//获得浏览器dpi
+		getDIP:function(){
+			if(!this.dpi){
+				const div = document.createElement('div');
+					
+				div.style.width = '1in';
+				div.style.height = '1in';
+				div.style.position = 'absolute';
+				div.style.top = '-100%';
+				div.style.left = '-100%';
+				div.style.visibility = 'hidden';
+				document.body.appendChild(div);
+				this.dpi=$(div).height();
+				$(div).remove();
+			}
+			return this.dpi;
+		},
+		renderDraggable:function(){
+			let dragFnc=(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
+				var elementHeight = ui.helper.outerHeight();
+				var elementWidth = ui.helper.outerWidth();
+				var parentHeight = this.targetbox.clientHeight;
+				var parentWidth = this.targetbox.clientWidth;
+				var maxY = parentHeight - elementHeight;
+				var maxX = parentWidth - elementWidth;
+				if(ptDesign.haveClassName(ui.helper[0],'img_style')){//如果拖拽的是图片
+					ui.position.left = Math.min(ui.position.left/this.scaleRatio, maxX) ;
+					ui.position.top = Math.min(ui.position.top/this.scaleRatio, maxY) ;
+				}else{//是普通的元素
+					ui.position.left = 0;
+					ui.position.top = Math.min(ui.position.top/this.scaleRatio, maxY) ;
+				}
+				if(ui.position.left < 0){
+					ui.position.left = 0
+				}
+				if(ui.position.top < 0){
+					ui.position.top = 0
+				}                    
+			}
+			// $(this.targetbox).find('.img_style').draggable()
+			$(this.targetbox).find(".field").draggable({
+			    stack: "#targetbox div",
+			    // axis: "y",
+			    // containment: "#targetbox",
+			    handle:'.handler_style',
+			    drag:dragFnc,
+				start:(event, ui)=>{
+				    // 在拖动开始时执行一些操作
+					this.setActiveDom(ui.helper[0]);
+				},
+				stop:(event, ui)=>{
+				    // 在拖动结束后执行一些操作
+					this.setOption(event.target,{
+						x:this.pxToMm(event.target.offsetLeft),
+						y:this.pxToMm(event.target.offsetTop),
+					});
+				}
+			});
+
+			
+		},
+		// px转毫米mm
+		pxToMm:function(px){
+			return parseFloat((px * 25.4 / this.getDIP()).toFixed(3));
+		},
+		// mm毫米转px
+		mMToPx:function(mm){
+			return parseFloat((mm * this.getDIP() / 25.4).toFixed(3));
+		},
+		// 判断某DOM是否有某类名
+		haveClassName:function(dom, className){
+			return dom.classList.contains(className);
+		},
+		
+		// 监听缩放+-按钮，放大/缩小小票
+		scaleChange:function(value){
+			if(this.scaleRatio-value<=0){
+				alert('已经最小了');
+				return;
+			}
+			this.scaleRatio += value
+		    this.targetbox.style.transform = `scale(${this.scaleRatio})`
+		},
+		
+		// 监听宽/高输入框输入事件，单位mm，同步小票、刻度尺尺寸
+		setSize:function(width,height){
+			if(width < 0){
+				alert('请输入有效宽度值')
+				return ;
+			}
+			if(typeof height=='number'){
+				if(height < 0){
+					alert('请输入有效宽度值')
+					return ;
+				}
+			}
+			let obj={width:width,height:height,autoHeight:height=='auto'?1:0};
+			this.setBase(obj);
+			this.setPanelValue(obj,this.baseEditTool);
+			if(width){
+				this.targetbox.style.width = `${width}mm`
+			}
+		    if(height){
+				if(height=='auto'){
+					height=400;//100%高度
+				}
+		        this.targetbox.style.height = `${height}mm`
+		    }
+			this.resetRulerXY();
+		},
+		setTheme:function(option){
+			this.setCssProperty('--themeColor1',option.color1);
+			this.setCssProperty('--themeColor2',option.color2);
+		},
+		//递归覆盖res的参数,当tar为''的时候会删除res的属性
+		setJson:function(res, tar) {
+		  for (let prop in tar) {
+		   if (typeof tar[prop] === 'object' && tar[prop] !== null) {
+		      if (Array.isArray(tar[prop])) {
+		        if (!Array.isArray(res[prop])) {
+		          res[prop] = [];
+		        }
+		        this.setJson(res[prop], tar[prop]);
+		      } else {
+		        if (typeof res[prop] !== 'object' || res[prop] === null) {
+		          res[prop] = {};
+		        }
+		        this.setJson(res[prop], tar[prop]);
+		      }
+		    } else {
+		      res[prop] = tar[prop];
+		    }
+		  }
+		},
+		//设置dom自身的data-config属性
+		setOption:function(dom,obj){
+			let result=this.getOption(dom);
+			this.setJson(result,obj);
+			dom.dataset.config=JSON.stringify(result);
+		},
+		getOption:function(dom){
+			let config=dom.dataset.config||'{}';
+			return JSON.parse(config);
+		},
+		
+		//设置背景图
+		setBgImage:function(url){
+			// 设置背景
+			this.targetbox.style.backgroundImage = `url(${url})`
+			this.targetbox.style.backgroundSize = 'cover'
+			this.targetbox.style.backgroundPosition = '50% 50%'
+			this.targetbox.style.backgroundRepeat = 'no-repeat'
+		},
+		//删除背景图
+		clearBgImage:function(){
+			if(this.targetbox.style.backgroundImage.indexOf('url') !== -1){
+			    this.targetbox.style.backgroundImage = ` linear-gradient(90deg, rgba(60, 10, 30, .04) 4%, transparent 0), linear-gradient(1turn, rgba(60, 10, 30, .04) 4%, transparent 0)`
+			    this.targetbox.style.backgroundSize = '5mm 5mm'
+			    this.targetbox.style.backgroundPosition = '0 0'
+			    this.targetbox.style.backgroundRepeat = 'repeat'
+			}
+		},
+		setCssProperty(name,value){
+			document.documentElement.style.setProperty(name,value);
+		},
+		getCssProperty(name){
+			return window.getComputedStyle(document.documentElement).getPropertyValue(name)
+		},
+		getBaseRule:function(selector){
+			let sheet = document.getElementById("baseStyle").sheet;
+			let rules = sheet.cssRules||sheet.rules;
+			for (var i = 0; i < rules.length; i++) {
+			  if (rules[i].selectorText === selector) {
+			    return rules[i];
+			  }
+			}
+			
+		},
+		setBase:function(option){
+			this.setOption(this.targetbox,option);
+		},
+		setFieldBase:function(option){
+			if(!option){
+				return ;
+			}
+			if(option.lineType){
+				this.setCssProperty('--baseLine-borderTopStyle',option.lineType);
+			}
+			if(option.fontFamily){
+				this.setCssProperty('--baseRow-fontFamily',option.fontFamily);
+			}
+			if(option.fontSize){
+				let value=option.fontSize;
+				if(value)value+='pt';
+				this.setCssProperty('--baseRow-fontSize',value);
+			}
+			if(option.fontWeight){
+				this.setCssProperty('--baseRow-fontWeight',option.fontWeight);
+			}
+			if(option.imgModel){
+				switch(option.imgModel){
+					case 1:this.setCssProperty('--baseImg-backgroundSize','contain');break;
+					case 2:this.setCssProperty('--baseImg-backgroundSize','100% 100%');break;
+					case 3:this.setCssProperty('--baseImg-backgroundSize','cover');break;
+				}
+				
+			}
+			this.setOption(this.targetbox,{
+				baseField:option
+			})
+			this.setPanelValue(option,this.baseEditTool);
+		},
+		setFieldByActive:function(config){
+			let current = document.getElementsByClassName('active')[0];
+			this.setField(current,config);
+		},
+		setFieldCellByActive:function(config){
+			if($(this.lastClickDom).hasClass('column')){
+				this.setField(this.lastClickDom,config);
+				//一个特殊属性，拖拽的resize css中直接赋值就是绑定
+				//$(this.tableColumStyle).find(':input[name="width"]').val(this.lastClickDom.offsetWidth)
+			}
+		},
+		setField:function(dom,config){
+			let option=this.getOption(dom);
+			this.positionChange(dom,config);
+			switch(option.type){
+				case 'line':{
+					if(typeof config.lineType!='undefined'){//如果改变了线的样式
+						this.lineStyleChange(dom,config.lineType);
+					}
+					break;
+				}
+				case 'row':{
+					if(typeof config.columnNum!='undefined'){
+						this.tableColumnNumIptChange(dom,config.columnNum);
+					}
+					break
+				}
+				case 'cell':{
+					if(typeof config.text!='undefined'){
+						this.cellTextChange(dom,config.text);
+					}
+					if(typeof config.align!='undefined'){
+						this.cellAlginChange(dom,config.align);
+					}
+					if(typeof config.fontFamily!='undefined'){
+						this.cellFontFamilyChange(dom,config.fontFamily);
+					}
+					if(typeof config.fontSize!='undefined'){
+						this.cellFontSizeChange(dom,config.fontSize);
+					}
+					if(typeof config.fontWeight!='undefined'){
+						this.cellFontWeightChange(dom,config.fontWeight);
+					}
+					break
+				}
+				case 'img':{
+					if(typeof config.imgModel!='undefined'){
+						this.imgModelChange(dom,config.imgModel);
+					}
+					if(typeof config.text!='undefined'){
+						this.imgTextChange(dom.getElementsByClassName('img_inner_style')[0],config.text);
+					}
+					break;
+				}
+			}
+			this.setOption(dom,config);
+		},
+		//初始化或设置模板
+		setTemplate:function(obj){
+			this.clear();
+			this.setBase(obj);
+			this.setTheme(obj.theme);
+			this.setSize(obj.width,obj.height);
+			this.setFieldBase(obj.baseField);
+			if(obj.bgImage){
+				this.setBgImage(obj.bgImage);	
+			}
+			this.setPanelValue(obj,this.baseEditTool);
+			//设置字段
+			if(obj.fields){
+				obj.fields.forEach(v=>{
+					switch(v.type){
+						case 'line':this.createLine(v);break;
+						case 'row':this.createTable(v);break;
+						case 'img':this.createImg(v);break;
+					}
+				});
+			}
+			this.renderDraggable();
+		},
+		//拿到全部配置
+		getTemplate:function(){
+			let result={};
+			//先拿到外层配置
+			let baseConfig=this.getOption(this.targetbox);
+			//使用ES6语法，展开再赋值（相当于clone)
+			result={...baseConfig};
+			//获取所有fields
+			let fields=$(this.targetbox).find('.field');//所有的field，包含.line_style,.table_style,.img_style
+			//重要，根据y坐标优先级来排序
+			fields.sort(function(a, b) {
+				return $(a).position().top - $(b).position().top;
+			});
+			//只要里面的data-config属性
+			fields=fields.map((i,v)=>{
+				let c=this.getOption(v);
+				let array=$(v).find('[data-config]').map((i2,v2)=>{
+					return this.getOption(v2);
+				});
+				if(array.length>0){
+					c.children=[...array];
+				}
+				return c;
+			});
+			result.fields=[...fields];
+			this.deleteEmptyValues(result);//删除掉所有为''的key(节约容量)
+			return result;
+		},
+		deleteEmptyValues:function(obj) {
+		  for (var prop in obj) {
+		    if (typeof obj[prop] === 'object') {
+		      if (Array.isArray(obj[prop])) {
+		        obj[prop].forEach((item)=>{
+		          this.deleteEmptyValues(item);
+		        });
+		      } else {
+		    	  this.deleteEmptyValues(obj[prop]);
+		      }
+		      if (Object.keys(obj[prop]).length === 0) {
+		        delete obj[prop];
+		      }
+		    } else if (obj[prop] === '') {
+		      delete obj[prop];
+		    }
+		  }
+		  return obj;
+		},
+		getFieldDom:function(dom){
+			if(this.haveClassName(dom,'field')){
+				return dom;
+			}else{
+				return $(dom).parents('.field')[0];
+			}
+		},
+		// 创建handler
+		createhandler:function(appendClass){
+		    let handler = document.createElement('div');
+		    handler.classList.add('handler_style');
+			handler.classList.add(appendClass);
+		    return handler
+		},
+		// 创建线, offset 元素y坐标
+		createLine:function(option){
+			let id=`tp_field_${this.idCounter++}`;
+		    let line = document.createElement('div')
+			line.dataset.id=id;
+		    line.style.position = "absolute"
+		    line.style.left = 0
+		    line.style.top = option.y + 'mm'
+		    line.classList.add('line_style');
+			line.classList.add('field');//这个属性是拿来查找的
+			line.classList.add('showLinePanel');
+		    line.innerHTML = "<div class='line_inner_style showLinePanel baseLine'></div>"
+		    line.appendChild(this.createhandler('showLinePanel'))
+			this.setOption(line,option);
+			this.setDivClick(line);//设置所有元素的click事件
+		    this.targetbox.appendChild(line)
+			this.lineStyleChange(line,option.lineType);
+			this.createLeftItem(id,'线','icon-hr')
+		    return line
+		},
+		// 创建表格，offset 元素y坐标，row 行，col 列
+		createTable:function(option){
+			let id=`tp_field_${this.idCounter++}`;
+		    let table = document.createElement('div')
+			table.dataset.id=id;
+		    table.classList.add('table_style');
+			table.classList.add('showRowPanel');
+			table.classList.add('field');//这个属性是拿来查找的
+		    table.style.position = "absolute"
+		    table.style.left = 0
+		    table.style.top = option.y + 'mm'
+			//创建行
+			let row = document.createElement('div')
+			row.classList.add('table_row_style');
+			
+			for(let i = 0;i < option.columnNum;i++){
+				let co=option.children[i];
+				let td = this.createCell(co);
+				row.appendChild(td)
+			}
+			
+			let last=$(row).find('.column:last')[0];
+			last.style.width='auto';
+			last.style.flex=1;
+			this.setOption(last,{width:$(last).width()})
+			table.appendChild(row)
+			//创建行结束
+		    table.appendChild(this.createhandler('showRowPanel'))
+			this.setOption(table,option);
+			this.setDivClick(table);//设置所有元素的click事件
+		    this.targetbox.appendChild(table)
+			this.createLeftItem(id,'行','icon-tx-changfangxing')
+		    return table
+		},
+		createCell:function(option){
+			let td = document.createElement('div')
+			td.classList.add('td')
+			td.classList.add(`column`);//这个属性是拿来查找的
+			td.classList.add(`resizable`);
+			td.classList.add(`showRowDetailPanel`);
+			td.classList.add('baseRow');
+			td.style.width=option.width+"mm";
+			this.cellTextChange(td,option.text||'');
+			this.cellAlginChange(td,option.align)
+			this.cellFontFamilyChange(td,option.fontFamily)
+			this.cellFontSizeChange(td,option.fontSize)
+			this.cellFontWeightChange(td,option.fontWeight)
+			td.setAttribute('contenteditable', 'true')
+			this.setOption(td,option);//设置默认属性
+			td.oninput = (e)=>{
+				let d=$(this.tableColumStyle).find(':input[name="text"]');
+			    d.val(e.target.innerHTML);
+				this.setOption(e.target,{text:d.val()});
+				let f=this.getFieldDom(e.target);
+				this.refreshLeftItem(f.dataset.id);
+			}
+			this.resizeObserver.observe(td);
+			return td;
+		},
+		createImg:function(option){
+			let id=`tp_field_${this.idCounter++}`;
+			let myImg = document.createElement('div')
+			myImg.dataset.id=id;
+			myImg.classList.add('img_style')
+			myImg.classList.add(`field`);//这个属性是拿来查找的
+			myImg.classList.add(`showImgPanel`);	
+			myImg.classList.add('baseImg');
+			myImg.style.position = "absolute"
+		    myImg.style.left = option.x + 'mm'
+		    myImg.style.top = option.y + 'mm'
+			myImg.style.width=option.width+"mm";
+			myImg.style.height=option.height+"mm";
+			this.imgModelChange(myImg,option.imgModel);
+
+			// 可缩放以及可编辑的盒子单独创建，不然会样式冲突
+			let myImgInner = document.createElement('div')
+			myImgInner.classList.add('img_inner_style')
+			myImgInner.classList.add('showImgPanel')
+			myImgInner.setAttribute('contenteditable', 'true')
+			myImgInner.oninput = (e)=>{
+				let d=$(this.imgEditTool).find(':input[name="text"]');
+			    d.val(e.target.innerText);
+				this.setOption(myImg,{text:d.val()});
+				let f=this.getFieldDom(e.target);
+				this.refreshLeftItem(f.dataset.id);
+			}
+			myImg.appendChild(myImgInner)
+		    myImg.appendChild(this.createhandler('showImgPanel'))
+			this.setOption(myImg,option);
+			this.setDivClick(myImg);//设置所有元素的click事件
+		    this.targetbox.appendChild(myImg)
+			this.imgTextChange(myImgInner,option.text||'');		
+			$(myImg).resizable({
+				containment: "#targetbox",
+				handles: "all",//可以随意拖动
+				stop:(event, ui)=>{
+					this.setOption(event.target,{
+						width:this.pxToMm(event.target.offsetWidth),
+						height:this.pxToMm(event.target.offsetHeight),
+					})
+				}
+			});
+			this.createLeftItem(id,'图','icon-tupian')
+		    return myImg
+		},
+		refreshLeftItem:function(id){
+			let field=$('.field[data-id="'+id+'"]');
+			let option=this.getOption(field[0]);
+			let text='';
+			switch(option.type){
+				case 'line':text='线条';break;
+				case 'row':{
+					let array=[];
+					field.find('.column').each((i,v)=>{
+						array.push($(v).text())
+					})
+					text=array.join(',');
+					break
+				};
+				case 'img':{
+					text=field.find('.img_inner_style').text();
+					break
+				};
+			}
+			$('.leftItemText[data-id="'+id+'"]').text(text);
+		},
+		createLeftItem:function(id,name,icon){
+			let html=`
+			<div class="element_item" data-id="${id}">
+				<div class="iconfont ${icon}"></div>
+				<div class="item_txt ellipsis-1">${name} - <span class="leftItemText" data-id="${id}"></span></div>
+			</div>
+			`;
+			$('#sortable_list').append(html);
+			this.refreshLeftItem(id);
+		},
+		removeActiveDom:function(){
+			$(this.targetbox).find(".active").each((i,element) => {
+			    element.classList.remove('active')
+			})
+		},
+		// 设置选中元素 控制右侧编辑栏展示
+		setActiveDom:function(dom){
+		    this.removeActiveDom();
+		    // 设置选中元素
+		    dom.classList.add('active')
+		},
+		//点击选中元素
+		setDivClick:function(dom){
+			//目前分为几种面板，1.base 2.row 3.line
+			$(dom).bind('click',(e)=>{
+				let d=e.target;
+				this.lastClickDom=d;
+				//先设置父元素选中
+				let field=this.getFieldDom(d);
+				this.setActiveDom(field)
+				
+				
+				//这里为了简单，统一命名规范，直接判断元素是否包含这些class，例如,showRowPanel showLinePanel，反正一定是show***panel
+				let re=d.className.match(/.*(show.*Panel).*/);
+				if(re&&re[1]){
+					let name=re[1];//showLinePanel
+					switch(name){
+						case 'showLinePanel':this.showLinePanel(d);break;
+						case 'showRowPanel':this.showRowPanel(d);break;
+						case 'showRowDetailPanel':this.showRowDetailPanel(d);break;
+						case 'showImgPanel':this.showImgPanel(d);break;
+					}
+				}
+			});
+		},
+		//显示各种panel
+		showLinePanel:function(dom){
+			this.lineEditTool.style.display = 'block'
+			this.baseEditTool.style.display = 'none'
+		    this.tableEditTool.style.display = 'none'
+			this.tableColumStyle.style.display = 'none';
+		    this.imgEditTool.style.display = 'none'
+			
+			//获取父节点config，然后赋值
+			let option=this.getOption(this.getFieldDom(dom));
+			this.setPanelValue(option,this.lineEditTool);
+		},
+		showRowPanel:function(dom){
+			this.tableEditTool.style.display = 'block';
+			this.baseEditTool.style.display = 'none'
+			this.lineEditTool.style.display = 'none';
+			this.tableColumStyle.style.display = 'none';
+		    this.imgEditTool.style.display = 'none'
+			//获取父节点config，然后赋值
+			let option=this.getOption(this.getFieldDom(dom));
+			this.setPanelValue(option,this.tableEditTool);
+			
+		},
+		showRowDetailPanel:function(dom){
+			this.tableEditTool.style.display = 'block';
+			this.baseEditTool.style.display = 'none'
+			this.lineEditTool.style.display = 'none';
+			this.tableColumStyle.style.display = 'block';
+		    this.imgEditTool.style.display = 'none'
+			//先赋值自己，再赋值父类
+			let option1=this.getOption(dom);
+			this.setPanelValue(option1,this.tableEditTool);
+			let option2=this.getOption(this.getFieldDom(dom));
+			this.setPanelValue(option2,this.tableEditTool);
+		},
+		showImgPanel:function(dom){
+			this.imgEditTool.style.display = 'block'
+			this.baseEditTool.style.display = 'none'
+			this.lineEditTool.style.display = 'none'
+		    this.tableEditTool.style.display = 'none'
+			//获取父节点config，然后赋值
+			let option=this.getOption(this.getFieldDom(dom));
+			this.setPanelValue(option,this.imgEditTool);
+		},
+		setPanelValue:function(option,dom){
+			$(dom).find(':input[name]').each((i,v)=>{
+				let name=$(v).prop('name');
+				if(name&&typeof option[name]!='undefined'){
+					$(v).val(option[name]);
+				}
+			});
+		},
+		// 删除选中元素
+		deleteActiveDom:function(){
+		    let domArr = [...document.getElementsByClassName('active')]
+		    if(domArr.length>0){
+		        domArr.forEach(item=>{
+		            if(this.haveClassName(item,'table_row_style')){
+		                item = item.parentNode
+		            }else if(this.haveClassName(item,'td')){
+		                item = item.parentNode.parentNode
+		            }
+		            let tempid=item.dataset.id;
+		            item.remove();
+		            $('.element_item[data-id="'+tempid+'"]').remove();
+		        })
+				this.baseEditTool.style.display = 'block'
+		        this.tableEditTool.style.display = 'none'
+		        this.lineEditTool.style.display = 'none'
+		        this.imgEditTool.style.display = 'none'
+				//删除左边leftitem的
+				
+		    }else{
+		        alert('请选择要删除的元素')
+		    }
+		},
+		positionChange:function(dom,config){
+			if(typeof config.x!='undefined'){
+				dom.style.left=config.x+'mm';
+			}
+			if(typeof config.y!='undefined'){
+				dom.style.top=config.y+'mm';
+			}
+			if(typeof config.width!='undefined'){
+				dom.style.width=config.width+'mm';
+			}
+			if(typeof config.height!='undefined'){
+				dom.style.height=config.height+'mm';
+			}
+			
+		},
+		lineStyleChange:function(dom,value){
+		    let lineInnerDom = dom.querySelector('.line_inner_style')
+		    lineInnerDom.style.borderTopStyle = value
+		},
+		// 监听表格列数变化
+		tableColumnNumIptChange:function(dom,num){
+		    if(num<1){
+		        alert('至少配置1列');
+				throw '至少配置1列';
+		    }
+		
+		    let table=dom;
+		    let row = [...table.getElementsByClassName('table_row_style')]
+		    let colNum =row[0].children.length
+		    let newColNum = num;
+		    if(colNum < newColNum){ // 增加
+		        row.forEach(r=>{
+		            for(let i = colNum+1; i <= newColNum; i++){
+		                let td = this.createCell(this.cellAppendData);
+		                r.appendChild(td)
+		            }
+		        })
+		    }else if(colNum > newColNum){ // 减少
+		        row.forEach(r=>{
+		            for(let i = 1; i <= colNum - newColNum; i++){
+		                // 如果把选中的元素删除了，指定选中的元素为表格
+		                r.removeChild(r.children[r.children.length-1])
+		            }
+		        })
+		    }else{
+		        return
+		    }
+			
+			//将最后一个宽度改为flex 1
+			let allColumn=$(row).find('.column');
+			let last=allColumn.last()[0];
+			last.style.width='auto';
+			last.style.flex=1;
+			this.setOption(last,{width:$(last).width()})
+			//判断前面是否有元素？如果是则取消flex:1
+			let last2=allColumn.last().prev();//倒数第二个元素
+			if(last2&&last2[0]){
+				let tempW=$(last2).width();
+				last2[0].style.flex='0 1 auto';
+				last2[0].style.width=tempW+'px';
+				this.setOption(last2[0],{width:tempW})
+			}
+		},
+		cellTextChange:function(dom,value){
+			dom.innerText=value;
+			if(this.getFieldDom(dom)){
+				this.refreshLeftItem(this.getFieldDom(dom).dataset.id);
+			}
+			
+		},
+		cellAlginChange:function(dom,value){
+			dom.style.textAlign = value
+		},
+		cellFontFamilyChange:function(dom,value){
+			dom.style.fontFamily = value
+		},
+		cellFontSizeChange:function(dom,value){
+			if(value)value+='pt';
+			dom.style.fontSize = value
+		},
+		cellFontWeightChange:function(dom,value){
+			dom.style.fontWeight = value
+		},
+		imgModelChange:function(dom,value){
+			switch(value){
+				case 1:dom.style.backgroundSize='contain';break;
+				case 2:dom.style.backgroundSize='100% 100%';break;
+				case 3:dom.style.backgroundSize='cover';break;
+			}
+		},
+		// 监听图片容器内容变化
+		imgTextChange:function(dom,value){
+			dom.innerHTML = value;
+			if(this.getFieldDom(dom)){
+				this.refreshLeftItem(this.getFieldDom(dom).dataset.id);
+			}
+		},
+		//重置卡尺
+		resetRulerXY:function(){
+			this.rulerX.style.width = this.targetbox.offsetWidth + 'px'
+			this.rulerY.style.width = this.targetbox.offsetHeight + 'px'
+		},
+		// 重置
+		clear:function(){
+		    // 移除所有元素
+		    $("#targetbox").children().not("div[id ='rulerX'],div[id ='rulerY']").remove(); 
+		    $("#sortable_list").children().remove();
+		   
+		    // 隐藏右侧工具栏
+			this.baseEditTool.style.display = 'block'
+		    this.tableEditTool.style.display = 'none'
+		    this.lineEditTool.style.display = 'none'
+		}
+		
+		
+	};
+    $(function(){
+		ptDesign.init({
+			width:210,//单位毫米
+			height:297,//单位毫米
+			wrapY:1,//紧贴上个元素的间距（单位毫米）
+			baseField:{lineType:'dashed',fontFamily:'Arial',fontSize:9,fontWrap:1,imgModel:1,imgCache:1},
+			theme:{
+				color1:'#3498db',
+				color2:'#ffffff',
+			},
+		});
+	})
+
+
+    
+
+</script>
+</html>
