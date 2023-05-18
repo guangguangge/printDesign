@@ -422,7 +422,7 @@
 				setTicketAndImg:function(){
 					ptDesign.setSize(240,140);
 					alert('已将模板设置为发票的240mm x 140mm');
-					ptDesign.setBgImage('images/ticketBg.jpg');
+					ptDesign.setBgImage('images/ticketBg.jpg',0.5);
 					alert('已添加模板背景');
 				},
 				clearImg:function(){
@@ -839,11 +839,12 @@
 		},
 		
 		//设置背景图
-		setBgImage:function(url){
+		setBgImage:function(url,opacity){
+			opacity=typeof opacity!='undefined'?opacity:0.5;
 			// 设置背景
-			this.targetbox.style.backgroundImage = `url(${url})`
-			this.targetbox.style.backgroundSize = 'cover'
-			this.targetbox.style.backgroundPosition = '50% 50%'
+			this.targetbox.style.backgroundImage = `linear-gradient(rgba(255, 255, 255,${opacity}), rgba(255, 255, 255,${opacity})),url(${url})`
+			this.targetbox.style.backgroundSize = '100% 100%'
+			//this.targetbox.style.backgroundPosition = '50% 50%'
 			this.targetbox.style.backgroundRepeat = 'no-repeat'
 		},
 		//删除背景图
@@ -970,7 +971,7 @@
 			this.setSize(obj.width,obj.height);
 			this.setFieldBase(obj.baseField);
 			if(obj.bgImage){
-				this.setBgImage(obj.bgImage);	
+				this.setBgImage(obj.bgImage.url,obj.bgImage.opacity);	
 			}
 			this.setPanelValue(obj,this.baseEditTool);
 			//设置字段
