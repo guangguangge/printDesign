@@ -100,6 +100,9 @@ div::-webkit-scrollbar-thumb {
   background-position: 0 0, 100% 0, 0 0, 0 100%;
   animation: rotate 0.5s infinite linear;
 }
+.active > .handler_style{
+  color: var(--themeColor1) !important;
+}
 @keyframes rotate {
   to {
     background-position: 0 -12px, 100% 12px, 12px 0, -12px 100%;
@@ -149,7 +152,7 @@ div::-webkit-scrollbar-thumb {
 
 }
 .out_wrapper .content_wrapper .left_content .left_top{
-  height: 230px;
+  height: 285px;
   overflow-y: auto;
 }
 .out_wrapper .content_wrapper .left_content .left_top .title {
@@ -242,6 +245,8 @@ div::-webkit-scrollbar-thumb {
   background-position: 0 0;
   background-repeat: repeat;
   transform-origin: -20px -20px;
+  /* background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect x="0" y="0" width="10" height="10" fill="white" stroke="rgba(60, 10, 30, 0.04)" stroke-width="0.25" /></svg>');
+  background-size: 10mm 10mm; */
 }
 .out_wrapper .content_wrapper .center_content #targetbox .background {
   position: absolute;
@@ -322,15 +327,45 @@ div::-webkit-scrollbar-thumb {
   background: url('images/Resizer.png') no-repeat center;
   background-size: cover;
 }
+.out_wrapper .content_wrapper .center_content #targetbox .box_style_dragCreating{
+	outline: 5px solid var(--themeColor1) !important;
+}
+.out_wrapper .content_wrapper .center_content #targetbox .box_style{
+	/* outline: 1px dashed #666; */
+	box-shadow: 0 0 0 1px var(--themeColor1);
+}
+.out_wrapper .content_wrapper .center_content #targetbox .box_style::after{
+  left: -10px;
+  width: calc(100% + 30px);
+}
+.out_wrapper .content_wrapper .center_content #targetbox .box_style .box_inner_style{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}
+.out_wrapper .content_wrapper .center_content #targetbox .box_style .box_inner_style:focus-visible {
+  outline: none;
+  background-color: #fbfdff;
+  border: 1px solid #c0ccda;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
 .out_wrapper .content_wrapper .center_content #targetbox .handler_style {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translate(100%, -50%);
   height: 30px;
-  width: 20px;
-  background: url('images/move2.png') no-repeat center;
-  background-size: cover;
+  width: 30px;
+  font-size: 22px;
+  color: #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .out_wrapper .content_wrapper .center_content #targetbox .ruler {
   overflow: hidden;
@@ -340,13 +375,13 @@ div::-webkit-scrollbar-thumb {
   width: 400mm;
   height: 15px;
 }
-.out_wrapper .content_wrapper .center_content #targetbox #rulerX {
+.out_wrapper .content_wrapper .center_content #targetbox #rulerXX {
   position: absolute;
   top: 0;
   transform: translateY(-100%);
   left: 0;
 }
-.out_wrapper .content_wrapper .center_content #targetbox #rulerY {
+.out_wrapper .content_wrapper .center_content #targetbox #rulerYY {
   position: absolute;
   top: 0px;
   left: -2px;

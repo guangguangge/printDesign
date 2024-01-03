@@ -61,6 +61,10 @@
 						<div class="iconfont icon-tupian"></div>
 						<div class="txt">图</div>
 					</div>
+					<div id="boxCreator" class="left_top_item">
+						<div class="iconfont icon-zuhe"></div>
+						<div class="txt">盒</div>
+					</div>
 				</div>
 				
 				<div class="left_bottom">
@@ -74,13 +78,41 @@
                 
                 <div id="targetbox" class="disableSelect">
                     <!-- 获取元素的时候要把尺子去除 -->
-                    <div id="rulerX" class="ruler">
-                        <img src="./images/rulerX.png" class="ruler_img" alt="">
-                    </div>
-                    <div id="rulerY" class="ruler">
-                        <img src="./images/rulerY.png" class="ruler_img" alt="">
-                    </div>
-                </div> 
+					<svg id="rulerXX" class="rulerXX" height="22" xmlns="http://www.w3.org/2000/svg">
+						<defs>
+							<pattern id="thex1mm" patternUnits="userSpaceOnUse" width="1mm" height="22">
+								<line x1="0" y1="15" x2="0" y2="21" style="stroke:black;stroke-width:0.5" />
+							</pattern>
+							<pattern id="thex5mm" patternUnits="userSpaceOnUse" width="5mm" height="22">
+								<line x1="0" y1="12" x2="0" y2="21" style="stroke:black; stroke-width:1" />
+							</pattern>
+							<pattern id="thex10mm" patternUnits="userSpaceOnUse" width="10mm" height="22">
+								<line x1="0" y1="10" x2="0" y2="21" style="stroke:black; stroke-width:1.5" />
+							</pattern>
+						</defs>
+						<rect x="-0.25" y="0" width="100%" height="22" fill="url(#thex1mm)" />
+						<rect x="-0.5" y="0" width="100%" height="22" fill="url(#thex5mm)" />
+						<rect x="-0.75" y="0" width="100%" height="22" fill="url(#thex10mm)" />
+					    <g id="ticks" font-family="Arial" font-size="10" fill="black"></g>
+					</svg>
+					<svg id="rulerYY" class="rulerYY" height="22" xmlns="http://www.w3.org/2000/svg">
+						<defs>
+							<pattern id="they1mm" patternUnits="userSpaceOnUse" width="1mm" height="22">
+								<line x1="0" y1="0" x2="0" y2="6" style="stroke:black; stroke-width:0.5" />
+							</pattern>
+							<pattern id="they5mm" patternUnits="userSpaceOnUse" width="5mm" height="22">
+								<line x1="0" y1="0" x2="0" y2="9" style="stroke:black; stroke-width:1" />
+							</pattern>
+							<pattern id="they10mm" patternUnits="userSpaceOnUse" width="10mm" height="22">
+								<line x1="0" y1="0" x2="0" y2="11" style="stroke:black; stroke-width:1.5" />
+							</pattern>
+						</defs>
+						<rect x="-0.25" y="0" width="100%" height="22" fill="url(#they1mm)" />
+						<rect x="-0.5" y="0" width="100%" height="22" fill="url(#they5mm)" />
+						<rect x="-0.75" y="0" width="100%" height="22" fill="url(#they10mm)" />
+					    <g id="ticks" font-family="Arial" font-size="10" fill="black"></g>
+					</svg>
+                </div>
             
             </div>
             <div class="right_content">
@@ -156,6 +188,7 @@
 						<div class="iconfont icon-hr"></div>
 						<span>线条配置</span>
 					</div>
+					<input name="parentId" type="hidden">
 					<div class="right_item flex">
 					    <span class="item_name">Y位置(mm)</span>
 					    <input name="y" min="0" type="number" oninput="ptDesign.setFieldByActive({y:parseFloat(this.value)})">
@@ -188,6 +221,7 @@
 						<div class="iconfont icon-tx-changfangxing"></div>
 						<span>行配置</span>
 					</div>
+					<input name="parentId" type="hidden">
 					<div class="right_item flex">
 					    <span class="item_name">Y位置(mm)</span>
 					    <input name="y" min="0" type="number" oninput="ptDesign.setFieldByActive({y:parseFloat(this.value)})">
@@ -337,6 +371,51 @@
 						<button class="delete" onclick="ptDesign.deleteActiveDom()">删除</button>
 					</div>
                 </div>
+				<div class="right_list" id="box_edit_tool">
+					<div class="tool_title baseTitle">
+						<div class="iconfont icon-liebiao"></div>
+						<span>盒配置</span>
+					</div>
+					<input name="id" type="hidden">
+					<div class="right_item flex">
+					    <span class="item_name">X位置(mm)</span>
+					    <input name="x" min="0" type="number" oninput="ptDesign.setFieldByActive({x:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">Y位置(mm)</span>
+					    <input name="y" min="0" type="number" oninput="ptDesign.setFieldByActive({y:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">宽度(mm)</span>
+					    <input name="width" min="0" type="number" oninput="ptDesign.setFieldByActive({width:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">高度(mm)</span>
+					    <input name="height" min="0" type="number" oninput="ptDesign.setFieldByActive({height:parseFloat(this.value)})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">紧跟上一个元素</span>
+					    <select name="autoY" onchange="ptDesign.setFieldByActive({autoY:this.value})">
+					        <option value="1">是</option>
+					        <option value="0">否</option>
+					    </select>
+					</div>
+				    <div class="right_item flex">
+						<span class="item_name">内容</span>
+						<input name="text" type="text" oninput="ptDesign.setFieldByActive({text:this.value})">
+					</div>
+					<div class="right_item flex">
+					    <span class="item_name">组变量</span>
+					    <input name="groupVar" type="text" oninput="ptDesign.setFieldByActive({groupVar:this.value})">
+					</div>
+					<div class="right_item flex">
+						<span class="item_name">变量</span>
+						<input name="var" type="text" oninput="ptDesign.setFieldByActive({var:this.value})">
+					</div>
+					<div class="right_item">
+						<button class="delete" onclick="ptDesign.deleteActiveDom()">删除</button>
+					</div>
+				</div>
             </div>
         </div>
 		<!-- 可以将以下代码删除-->
@@ -346,23 +425,25 @@
 				<div class="tip">在线样例（注意：若您接入后，请删除这个TIPS）</div>
 				<br>
 				<div><b>引入步骤：</b></div>
-				<div class="tips_item">1. 在您的系统中引入此网页源代码</div>
-				<div class="tips_item">2. 参考下面API“初始化模板”和“提取模板结果”，接入到您的系统</div>
-				<div class="tips_item">3. 在需要打印的地方，使用代码desktool('print',{...})</div>
-				<div class="tips_item">4. 当所有API已熟悉，请再次看一下<a target="_blank" href="../printerdesignhelp.html">全参数注解</a></div>
+				<div class="tips_item">1. 下载该网页代码（<a target="_blank" href="https://github.com/guangguangge/printDesign">github</a> 或 <a target="_blank" href="https://gitee.com/guangguangge/print-design" >gitee</a>），并引入到您的项目中(html+js)，开发思路为以下3步：</div>
+				<div class="tips_item">①. “展示页面”，在您自己系统或ERP中给用户展示本网页，用于用户自己diy设计修改模板</div>
+				<div class="tips_item">②. “保存模板”，使用js函数getTemplate提取模板结果，把用户设计后的模板代码保存到您的数据库Database中</div>
+				<div class="tips_item">③. “正式打印”，在您系统需要打印的地方（例如：付款后打印小票的场景），调用js函数desktool('print',{...})即可实现静默分页打印</div>
+				<div class="tips_item">其他说明：当所有API已熟悉，请再次看一下<a target="_blank" href="../printerdesignhelp.html">全参数注解</a></div>
 				<br>
-				<div><b>此页面API：</b></div>
-				<div class="tips_item">2. 改变皮肤 <button onclick="ptDemo.setTheme({color1:'#27ae60',color2:'#FFFFFF'});">皮肤1</button> <button onclick="ptDemo.setTheme({color1:'#9b59b6',color2:'#FFFFFF'});">皮肤2</button> <button onclick="ptDemo.setTheme({color1:'#dc2a0b',color2:'#FFFFFF'});">皮肤3</button></div>
-				<div class="tips_item">2. 初始化模板 <button onclick="ptDemo.setTp();">点击这里</button></div>
-				<div class="tips_item">3. 缩放画布 <button onclick="ptDemo.scale(+0.1);">+</button> <button onclick="ptDemo.scale(-0.1);">-</button></div>
-				<div class="tips_item">4. 清空模板 <button onclick="ptDemo.clear();">点击这里</button></div>
-				<div class="tips_item">5. 设置为A4大小 <button onclick="ptDemo.setA4();">点击这里</button></div>
-				<div class="tips_item">6. 设置为小票（58毫米）大小 <button onclick="ptDemo.setTicket();">点击这里</button></div>
-				<div class="tips_item">7. 设置为发票大小+背景图 <button onclick="ptDemo.setTicketAndImg();">点击这里</button></div>
-				<div class="tips_item">8. 删除模板背景 <button onclick="ptDemo.clearImg();">点击这里</button></div>
-				<div class="tips_item">9. 提取模板结果 <button onclick="ptDemo.getTemplate();">点击这里</button></div>
-				<div class="tips_item">10. 打印当前模板 <button onclick="ptDemo.print();">默认打印机静默打印（推荐）</button> <button onclick="ptDemo.print(true);">选择打印</button></div>
-				<div class="tips_item">11.完整示例：一键设置模板+提取模板+模拟数据+分页打印</div>
+				<div><b>此demo页面的API：</b></div>
+				<div class="tips_item">1. 改变皮肤 <button onclick="ptDemo.setTheme({color1:'#27ae60',color2:'#FFFFFF'});">皮肤1</button> <button onclick="ptDemo.setTheme({color1:'#9b59b6',color2:'#FFFFFF'});">皮肤2</button> <button onclick="ptDemo.setTheme({color1:'#dc2a0b',color2:'#FFFFFF'});">皮肤3</button></div>
+				<div class="tips_item">2. 初始化模板1 <button onclick="ptDemo.setTp1();">点击这里</button></div>
+				<div class="tips_item">3. 初始化模板2 <button onclick="ptDemo.setTp2();">点击这里</button></div>
+				<div class="tips_item">4. 初始化模板3 <button onclick="ptDemo.setTp3();">点击这里</button></div>
+				<div class="tips_item">5. 删除模板背景 <button onclick="ptDemo.clearImg();">点击这里</button></div>
+				<div class="tips_item">6. 缩放画布 <button onclick="ptDemo.scale(+0.1);">+</button> <button onclick="ptDemo.scale(-0.1);">-</button></div>
+				<div class="tips_item">7. 清空模板 <button onclick="ptDemo.clear();">点击这里</button></div>
+				<div class="tips_item">8. 设置为A4大小 <button onclick="ptDemo.setA4();">点击这里</button></div>
+				<div class="tips_item">9. 设置为小票（58毫米）大小 <button onclick="ptDemo.setTicket();">点击这里</button></div>
+				<div class="tips_item">10. 提取模板结果 <button onclick="ptDemo.getTemplate();">点击这里</button></div>
+				<div class="tips_item">11. 打印当前模板 <button onclick="ptDemo.print();">默认打印机静默打印（推荐）</button> <button onclick="ptDemo.print(true);">选择打印</button></div>
+				<div class="tips_item">12.完整示例：一键设置模板+提取模板+模拟数据+分页打印</div>
 				<div class="tips_item">
 					<button onclick="ptDemo.lastPrint1();">1.设置模板</button> 
 					<button onclick="ptDemo.lastPrint2();">2.提取模板</button> 
@@ -396,13 +477,30 @@
 				setTheme:function(themeColors){
 					ptDesign.setTheme(themeColors);
 				},
-				getTp:function(){
+				getTp1:function(){
 					let tp={"width":210,"height":297,"wrapY":1,"baseField":{"lineType":"dashed","fontFamily":"Arial","fontSize":9,"fontWrap":1,"imgModel":1,"imgCache":1},"theme":{"color1":"#3498db","color2":"#ffffff"},"autoHeight":0,"fields":[{"type":"row","autoY":0,"columnNum":1,"y":0.794,"children":[{"type":"cell","text":"小票标题","var":"title","align":"center","width":210.079,"x":0}],"x":0},{"type":"img","autoY":0,"text":"LOGO","var":"logo","width":17.462,"height":14.023,"imgEngine":"QR_CODE","y":4.763,"x":96.308},{"type":"line","autoY":0,"lineType":"solid","y":20.637,"x":0},{"type":"row","autoY":0,"columnNum":2,"y":23.813,"children":[{"type":"cell","text":"商品名/条形码","align":"left","width":105.04,"x":0},{"type":"cell","text":"数量/价格","align":"left","width":105.04,"x":105.04}],"x":0},{"type":"row","autoY":0,"columnNum":2,"groupVar":"myItems","y":33.073,"children":[{"type":"cell","text":"某商品名称","var":"itemName","align":"left","width":105.04,"x":0},{"type":"cell","text":"10个","var":"itemCount","align":"left","width":105.04,"x":105.04}],"x":0},{"type":"img","autoY":0,"text":"条形码示例","width":44.979,"height":5.292,"imgEngine":"CODE_128","y":37.306,"x":0,"groupVar":"myItems","var":"itemCode"},{"type":"row","autoY":0,"columnNum":2,"groupVar":"myItems","y":38.894,"children":[{"type":"cell","align":"left","width":105.04,"x":0},{"type":"cell","text":"20元","var":"itemPrice","align":"left","width":105.04,"x":105.04}],"x":0},{"type":"line","autoY":"1","y":43.921,"groupVar":"myItems","x":0},{"type":"row","autoY":"1","columnNum":2,"y":80,"children":[{"type":"cell","text":"合计：","align":"right","width":105.04,"x":0},{"type":"cell","text":"100元","var":"sumPrice","align":"left","width":105.04,"x":105.04}],"x":0}]}
 					return tp;
 				},
-				setTp:function(){
-					ptDesign.setTemplate(this.getTp());
-					alert('已将模板初始化，其中宽度为58mm高度为自适应，并添加了几个字段');
+				getTp2:function(){
+					let tp={"width":320,"height":250,"wrapY":1,"baseField":{"lineType":"dashed","fontFamily":"Arial","fontSize":9,"fontWrap":1,"imgModel":1,"imgCache":1},"theme":{"color1":"#3498db","color2":"#ffffff"},"autoHeight":0,"fields":[{"type":"img","autoY":0,"text":"左边banner","width":154.781,"height":246.856,"imgEngine":"NORMAL","y":0,"x":0},{"type":"img","autoY":0,"text":"右边banner","width":154.781,"height":65.352,"imgEngine":"NORMAL","y":0,"x":159.808},{"type":"img","autoY":0,"width":156.369,"height":109.273,"imgEngine":"NORMAL","y":69.585,"x":160.338},{"type":"box","id":12,"autoY":0,"width":156.104,"height":62.971,"y":181.769,"x":160.602},{"type":"row","autoY":0,"columnNum":1,"children":[{"type":"cell","text":"底部标题","align":"center","fontSize":"22","width":156.104,"x":0}],"parentId":12,"y":8.202,"x":0},{"type":"line","autoY":0,"parentId":12,"y":21.96,"x":0},{"type":"row","autoY":0,"columnNum":1,"children":[{"type":"cell","text":"联系方式：xxxxx ","align":"right","fontSize":"12","width":156.104,"x":0}],"parentId":12,"y":51.329,"x":0}]}
+					return tp;
+				},
+				setTp1:function(){
+					ptDesign.setTemplate(this.getTp1());
+					ptDesign.scaleSet(1);
+					alert('已将模板初始化（模拟A4纸），其中宽度为210mm高度为297mm，并示例添加了几个字段');
+				},
+				setTp2:function(){
+					ptDesign.setTemplate(this.getTp2());
+					ptDesign.scaleSet(0.7);
+					alert('已将模板初始化（模拟海报），其中宽度是320mm高度是250mm，并示例添加了几个字段');
+				},
+				setTp3:function(){
+					ptDesign.clear();
+					ptDesign.setSize(240,140);
+					ptDesign.setBgImage('images/ticketBg.jpg',0.5);
+					ptDesign.scaleSet(1);
+					alert('已将模板初始化（模拟发票），其中宽度是240mm高度是140mm，并示例添加了几个字段');
 				},
 				scale:function(num){
 					ptDesign.scaleChange(num);
@@ -418,12 +516,6 @@
 				setTicket:function(){
 					ptDesign.setSize(58,'auto');
 					alert('已将模板设置为超市下票的的58mm x auto高度');
-				},
-				setTicketAndImg:function(){
-					ptDesign.setSize(240,140);
-					alert('已将模板设置为发票的240mm x 140mm');
-					ptDesign.setBgImage('images/ticketBg.jpg',0.5);
-					alert('已添加模板背景');
 				},
 				clearImg:function(){
 					ptDesign.clearBgImage();
@@ -452,7 +544,7 @@
 					desktool('print',param);
 				},
 				lastPrint1:function(){
-					let tp=this.getTp();
+					let tp=this.getTp1();
 					ptDesign.setTemplate(tp);//1.设置模板（此场景应用在您的web系统“进入编辑模板页面”）
 					alert('模版已设置');
 				},
@@ -501,7 +593,7 @@
 						/* printerName:'Microsoft Print to PDF' *///不写此参数代表使用默认打印机，如果填写是指定使用当前电脑的window的Microsoft Print to PDF打印机打印。这样可以直接打成pdf看效果，顺便提醒，也支持局域网打印机
 						baseData:baseData,
 						data:data,
-						template:this.getTp(),
+						template:this.getTp1(),
 					};
 					desktool('print',param);
 				},
@@ -520,8 +612,8 @@
 		
 		targetbox:document.querySelector('#targetbox'), // 小票容器盒子
 		scaleBox:document.getElementsByClassName('slider_wrap')[0], // 缩放工具
-		rulerX:document.querySelector('#rulerX'), // 横向刻度尺
-		rulerY:document.querySelector('#rulerY'), // 纵向刻度尺
+		rulerX:document.querySelector('#rulerXX'), // 横向刻度尺
+		rulerY:document.querySelector('#rulerYY'), // 纵向刻度尺
 		centerBox:document.getElementsByClassName('center_content')[0], //中间容器盒子
 		
 		
@@ -530,8 +622,11 @@
 		tableEditTool:document.querySelector('#table_edit_tool'), // 右侧表格工具盒子
 		tableColumNumIpt:document.querySelector('#table_colum_num'), // 表格列数输入框
 		tableColumStyle:document.querySelector('#table_colunm_style'), // 表格列样式盒子
-		imgEditTool:document.querySelector('#img_edit_tool'), // 右侧工具盒子		
+		imgEditTool:document.querySelector('#img_edit_tool'), // 右侧工具盒子
+		boxEditTool:document.querySelector('#box_edit_tool'), // 右侧工具盒子
 		
+		canDragInBox:false,
+		dragCreateBox:null,
 		scaleRatio:1, // 缩放比例，默认为1
 		
 		lastClickDom:null,//最后一个点击的元素
@@ -552,6 +647,7 @@
 		rowAppendData:{type:'row',autoY:0,columnNum:1,groupVar:''},
 		cellAppendData:{type:'cell',text:'',var:'',align:'left',fontSize:'',fontFamily:'',fontWeight:'',fontWrap:''},
 		imgAppendData:{type:'img',autoY:0,text:'',var:'',width:20,height:15,imgModel:'',imgCache:'',imgEngine:'NORMAL',groupVar:''},
+		boxAppendData:{type:'box',id:'',autoY:0,text:'',var:'',width:50,height:30,groupVar:''},
 		
 		init:function(option){
 			
@@ -570,7 +666,7 @@
 			        this.scaleChange(-.1)
 			    }
 			});
-
+			
 			// 左下列表可排序
 			$( "#sortable_list" ).sortable({
 				
@@ -588,27 +684,53 @@
 			// 线条按钮drag事件
 			$( "#lineCreator" ).draggable({
 			    helper: function(event){
-			        return $(`<div style='width:${document.querySelector('#targetbox').offsetWidth}px;border:1px dashed #000'></div>`)
+			        return $(`<div style='width:1px;border:1px dashed #000'></div>`)
 			    },
 			    cursorAt:{ top: 0, left: 0 },
 			    opacity:0.5,
 			    appendTo:'#targetbox',
+				start:(event, ui)=>{
+					this.canDragInBox=true;
+					this.removeActiveDom();
+				},
+				stop:(event, ui)=>{
+					this.canDragInBox=false;
+					$('.box_style_dragCreating').removeClass('box_style_dragCreating');
+				},
 			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
-			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
-					ui.position.top = Math.round(ui.position.top / this.scaleRatio);                    
+					ui.position.left = Math.round(ui.position.left / this.scaleRatio);
+					ui.position.top = Math.round(ui.position.top / this.scaleRatio);
+					if(this.dragCreateBox){
+						ui.helper.width(this.getParent(this.dragCreateBox).width())
+					}else{
+						ui.helper.width(document.querySelector('#targetbox').offsetWidth)
+					}
 			    },
 			});
 			// 表格按钮drag事件
 			$( "#tableCreator" ).draggable({
 			    helper: function(event){
-			        return $(`<div style="width:${document.querySelector('#targetbox').offsetWidth}px;height:20px;border:1px dashed #000"></div>`)
+			        return $(`<div style="width:1px;height:20px;border:1px dashed #000"></div>`)
 			    },
-			    cursorAt:{ top: 0, left: 0 },
+			    cursorAt:{ top: 0, left: -15 },
 			    opacity:0.5,
 			    appendTo:'#targetbox',
+				start:(event, ui)=>{
+					this.canDragInBox=true;
+					this.removeActiveDom();
+				},
+				stop:(event, ui)=>{
+					this.canDragInBox=false;
+					$('.box_style_dragCreating').removeClass('box_style_dragCreating');
+				},
 			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
 			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
-					ui.position.top = Math.round(ui.position.top / this.scaleRatio); 
+			        ui.position.top = Math.round(ui.position.top / this.scaleRatio);
+			        if(this.dragCreateBox){
+			        	ui.helper.width(this.getParent(this.dragCreateBox).width())
+			        }else{
+			        	ui.helper.width(document.querySelector('#targetbox').offsetWidth)
+			        }
 			    },
 			});
 			// 图片按钮drag事件
@@ -619,6 +741,28 @@
 			    cursorAt:{ top: 0, left: 0 },
 			    opacity:0.5,
 			    appendTo:'#targetbox',
+				start:(event, ui)=>{
+					this.removeActiveDom();
+				},
+				stop:(event, ui)=>{
+				},
+			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
+			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
+					ui.position.top = Math.round(ui.position.top / this.scaleRatio);
+			    },
+			});
+			$( "#boxCreator" ).draggable({
+			    helper: function(event){
+			        return $(`<div style='width:50mm;height:30mm;border:1px dashed #000'></div>`)
+			    },
+			    cursorAt:{ top: 0, left: 0 },
+			    opacity:0.5,
+			    appendTo:'#targetbox',
+				start:(event, ui)=>{
+					this.removeActiveDom();
+				},
+				stop:(event, ui)=>{
+				},
 			    drag:(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
 			        ui.position.left = Math.round(ui.position.left / this.scaleRatio);
 					ui.position.top = Math.round(ui.position.top / this.scaleRatio);                    
@@ -626,7 +770,7 @@
 			});
 
 			$( "#targetbox" ).draggable({
-			    cancel:'.line_style, .table_style, .img_style, .handler_style',
+			    cancel:'.line_style, .table_style, .img_style, .box_style, .handler_style',
 			})
 			
 			
@@ -635,6 +779,11 @@
 			    accept:'.left_top div,#targetbox div',
 			    activeClass: "bg-active",
 			    drop:( event, ui)=>{
+					let parentId;
+					if(this.dragCreateBox){
+						parentId=0+this.dragCreateBox;
+						this.dragCreateBox=null;
+					}
 			        let currentDom
 			        let dragDom = ui.draggable[0]
 			        var targetboxHeight = this.targetbox.clientHeight;
@@ -643,19 +792,34 @@
 			                return;
 			            }
 						let temp={...this.lineAppendData};
-						temp.y=this.pxToMm(ui.position.top);
+						if(parentId){
+							temp.parentId=parentId;
+							let t1=ui.position.top
+							let t2=Math.round(this.getParent(parentId).position().top / this.scaleRatio)
+							temp.y=this.pxToMm(t1-t2);
+						}else{
+							temp.y=this.pxToMm(ui.position.top);
+						}
 			            currentDom = this.createLine(temp);
 			        }else if(dragDom.id == 'tableCreator'){ // 创建表格元素
 			            if(ui.position.top > targetboxHeight){
 			                return;
 			            }
 						let temp={...this.rowAppendData};
-						temp.y=this.pxToMm(ui.position.top);
+						
 						let array=[];
 						for(let i=0;i<this.rowAppendData.columnNum;i++){
 							array.push({...this.cellAppendData});
 						}
 						temp.children=array;
+						if(parentId){
+							temp.parentId=parentId;
+							let t1=ui.position.top
+							let t2=Math.round(this.getParent(parentId).position().top / this.scaleRatio)
+							temp.y=this.pxToMm(t1-t2);
+						}else{
+							temp.y=this.pxToMm(ui.position.top);
+						}
 			            currentDom = this.createTable(temp);
 			        }else if(dragDom.id == 'imgCreator'){  // 创建图片
 			            if(ui.position.top > targetboxHeight){
@@ -665,6 +829,14 @@
 						temp.y=this.pxToMm(ui.position.top);
 						temp.x=this.pxToMm(ui.position.left);
 			            currentDom = this.createImg(temp);
+			        }else if(dragDom.id == 'boxCreator'){  // 创建图片
+			            if(ui.position.top > targetboxHeight){
+			                return;
+			            }
+						let temp={...this.boxAppendData};
+						temp.y=this.pxToMm(ui.position.top);
+						temp.x=this.pxToMm(ui.position.left);
+			            currentDom = this.createBox(temp);
 			        }else{ // 其他元素drop
 			            currentDom = dragDom
 			        }
@@ -687,6 +859,7 @@
 					this.tableEditTool.style.display = 'none'
 					this.lineEditTool.style.display = 'none'
 					this.imgEditTool.style.display = 'none'
+					this.boxEditTool.style.display = 'none'
 				}
 			})
 			$(this.centerBox).click();
@@ -712,13 +885,14 @@
 		},
 		renderDraggable:function(){
 			let dragFnc=(event, ui)=>{  // 处理放大/缩小后拖拽比例问题
+				let config=ui.helper.data('config');
 				var elementHeight = ui.helper.outerHeight();
 				var elementWidth = ui.helper.outerWidth();
 				var parentHeight = this.targetbox.clientHeight;
 				var parentWidth = this.targetbox.clientWidth;
 				var maxY = parentHeight - elementHeight;
 				var maxX = parentWidth - elementWidth;
-				if(ptDesign.haveClassName(ui.helper[0],'img_style')){//如果拖拽的是图片
+				if(ptDesign.haveClassName(ui.helper[0],'img_style')||ptDesign.haveClassName(ui.helper[0],'box_style')){//如果拖拽的是图片
 					ui.position.left = Math.min(ui.position.left/this.scaleRatio, maxX) ;
 					ui.position.top = Math.min(ui.position.top/this.scaleRatio, maxY) ;
 				}else{//是普通的元素
@@ -730,7 +904,13 @@
 				}
 				if(ui.position.top < 0){
 					ui.position.top = 0
-				}                    
+				}
+				if(config.parentId){
+					let p=this.getParent(config.parentId);
+					if(ui.position.top>p.height()){
+						ui.position.top = p.height();
+					}
+				}
 			}
 			// $(this.targetbox).find('.img_style').draggable()
 			$(this.targetbox).find(".field").draggable({
@@ -751,6 +931,26 @@
 					});
 				}
 			});
+			/* $(this.targetbox).find(".field").each((i,v)=>{
+				$(v).draggable({
+				    stack: v.parentNode,
+				    // axis: "y",
+				    // containment: "#targetbox",
+				    handle:'.handler_style',
+				    drag:dragFnc,
+					start:(event, ui)=>{
+					    // 在拖动开始时执行一些操作
+						this.setActiveDom(ui.helper[0]);
+					},
+					stop:(event, ui)=>{
+					    // 在拖动结束后执行一些操作
+						this.setOption(event.target,{
+							x:this.pxToMm(event.target.offsetLeft),
+							y:this.pxToMm(event.target.offsetTop),
+						});
+					}
+				});
+			}) */
 
 			
 		},
@@ -761,6 +961,9 @@
 		// mm毫米转px
 		mMToPx:function(mm){
 			return parseFloat((mm * this.getDIP() / 25.4).toFixed(3));
+		},
+		getParent:function(id){
+			return $(`#tp_field_${id}`)
 		},
 		// 判断某DOM是否有某类名
 		haveClassName:function(dom, className){
@@ -773,7 +976,11 @@
 				alert('已经最小了');
 				return;
 			}
-			this.scaleRatio += value
+			value=this.scaleRatio+value;
+			this.scaleSet(value);
+		},
+		scaleSet:function(value){
+			this.scaleRatio = value
 		    this.targetbox.style.transform = `scale(${this.scaleRatio})`
 		},
 		
@@ -960,6 +1167,12 @@
 					}
 					break;
 				}
+				case 'box':{
+					// if(typeof config.text!='undefined'){
+					// 	//this.imgTextChange(dom.getElementsByClassName('box_inner_style')[0],config.text);
+					// }
+					break;
+				}
 			}
 			this.setOption(dom,config);
 		},
@@ -981,6 +1194,7 @@
 						case 'line':this.createLine(v);break;
 						case 'row':this.createTable(v);break;
 						case 'img':this.createImg(v);break;
+						case 'box':this.createBox(v);break;
 					}
 				});
 			}
@@ -997,17 +1211,20 @@
 			let fields=$(this.targetbox).find('.field');//所有的field，包含.line_style,.table_style,.img_style
 			//重要，根据y坐标优先级来排序
 			fields.sort(function(a, b) {
-				return $(a).position().top - $(b).position().top;
+				return $(a).offset().top - $(b).offset().top;
 			});
 			//只要里面的data-config属性
 			fields=fields.map((i,v)=>{
 				let c=this.getOption(v);
-				let array=$(v).find('[data-config]').map((i2,v2)=>{
-					return this.getOption(v2);
-				});
-				if(array.length>0){
-					c.children=[...array];
+				if(c.type!='box'){
+					let array=$(v).find('[data-config]').map((i2,v2)=>{
+						return this.getOption(v2);
+					});
+					if(array.length>0){
+						c.children=[...array];
+					}
 				}
+				
 				return c;
 			});
 			result.fields=[...fields];
@@ -1043,13 +1260,16 @@
 		// 创建handler
 		createhandler:function(appendClass){
 		    let handler = document.createElement('div');
-		    handler.classList.add('handler_style');
+			handler.classList.add('iconfont');
+		    handler.classList.add('icon-move1');
+			handler.classList.add('handler_style');
 			handler.classList.add(appendClass);
 		    return handler
 		},
 		// 创建线, offset 元素y坐标
 		createLine:function(option){
 			let id=`tp_field_${this.idCounter++}`;
+			let parentId=option.parentId;
 		    let line = document.createElement('div')
 			line.dataset.id=id;
 		    line.style.position = "absolute"
@@ -1062,7 +1282,11 @@
 		    line.appendChild(this.createhandler('showLinePanel'))
 			this.setOption(line,option);
 			this.setDivClick(line);//设置所有元素的click事件
-		    this.targetbox.appendChild(line)
+			if(parentId){
+				this.getParent(parentId).append(line);
+			}else{
+				this.targetbox.appendChild(line)	
+			}
 			this.lineStyleChange(line,option.lineType);
 			this.createLeftItem(id,'线','icon-hr')
 		    return line
@@ -1070,6 +1294,7 @@
 		// 创建表格，offset 元素y坐标，row 行，col 列
 		createTable:function(option){
 			let id=`tp_field_${this.idCounter++}`;
+			let parentId=option.parentId;
 		    let table = document.createElement('div')
 			table.dataset.id=id;
 		    table.classList.add('table_style');
@@ -1097,7 +1322,11 @@
 		    table.appendChild(this.createhandler('showRowPanel'))
 			this.setOption(table,option);
 			this.setDivClick(table);//设置所有元素的click事件
-		    this.targetbox.appendChild(table)
+			if(parentId){
+				this.getParent(parentId).append(table);
+			}else{
+				this.targetbox.appendChild(table)	
+			}
 			this.createLeftItem(id,'行','icon-tx-changfangxing')
 		    return table
 		},
@@ -1129,6 +1358,7 @@
 		createImg:function(option){
 			let id=`tp_field_${this.idCounter++}`;
 			let myImg = document.createElement('div')
+			myImg.id=id;
 			myImg.dataset.id=id;
 			myImg.classList.add('img_style')
 			myImg.classList.add(`field`);//这个属性是拿来查找的
@@ -1172,6 +1402,74 @@
 			this.createLeftItem(id,'图','icon-tupian')
 		    return myImg
 		},
+		createBox:function(option){
+			let idIndex;
+			if(option.id){
+				idIndex=option.id;
+				this.idCounter=idIndex>this.idCounter?idIndex:this.idCounter;
+			}else{
+				idIndex=this.idCounter++;
+			}
+			option.id=idIndex;
+			let id=`tp_field_${idIndex}`;
+			let myImg = document.createElement('div')
+			myImg.id=id;
+			myImg.dataset.id=id;
+			myImg.classList.add('box_style')
+			myImg.classList.add(`field`);//这个属性是拿来查找的
+			myImg.classList.add(`showBoxPanel`);	
+			/* myImg.classList.add('baseImg'); */
+			myImg.style.position = "absolute"
+		    myImg.style.left = option.x + 'mm'
+		    myImg.style.top = option.y + 'mm'
+			myImg.style.width=option.width+"mm";
+			myImg.style.height=option.height+"mm";
+			/* this.imgModelChange(myImg,option.imgModel); */
+		
+			myImg.onmouseenter=(e)=>{
+				if(this.canDragInBox){
+					e.target.classList.add('box_style_dragCreating')
+					this.dragCreateBox=idIndex;
+				}
+			}
+			myImg.onmouseleave=(e)=>{
+				if(this.canDragInBox){
+					e.target.classList.remove('box_style_dragCreating')
+					this.dragCreateBox=null;
+				}
+			}
+			// 可缩放以及可编辑的盒子单独创建，不然会样式冲突
+			let myImgInner = document.createElement('div')
+			
+			myImgInner.classList.add('box_inner_style')
+			myImgInner.classList.add('showBoxPanel')
+			myImgInner.setAttribute('contenteditable', 'true')
+			myImgInner.oninput = (e)=>{
+				let d=$(this.boxEditTool).find(':input[name="text"]');
+			    d.val(e.target.innerText);
+				this.setOption(myImg,{text:d.val()});
+				let f=this.getFieldDom(e.target);
+				this.refreshLeftItem(f.dataset.id);
+			}
+			myImg.appendChild(myImgInner)
+		    myImg.appendChild(this.createhandler('showBoxPanel'))
+			this.setOption(myImg,option);
+			this.setDivClick(myImg);//设置所有元素的click事件
+		    this.targetbox.appendChild(myImg)
+			this.imgTextChange(myImgInner,option.text||'');		
+			$(myImg).resizable({
+				containment: "#targetbox",
+				handles: "all",//可以随意拖动
+				stop:(event, ui)=>{
+					this.setOption(event.target,{
+						width:this.pxToMm(event.target.offsetWidth),
+						height:this.pxToMm(event.target.offsetHeight),
+					})
+				}
+			});
+			this.createLeftItem(id,'盒','icon-liebiao')
+		    return myImg
+		},
 		refreshLeftItem:function(id){
 			let field=$('.field[data-id="'+id+'"]');
 			let option=this.getOption(field[0]);
@@ -1185,11 +1483,15 @@
 					})
 					text=array.join(',');
 					break
-				};
+				}
 				case 'img':{
 					text=field.find('.img_inner_style').text();
 					break
-				};
+				}
+				case 'box':{
+					text=field.find('.box_inner_style').text();
+					break
+				}
 			}
 			$('.leftItemText[data-id="'+id+'"]').text(text);
 		},
@@ -1220,6 +1522,8 @@
 			$(dom).bind('click',(e)=>{
 				let d=e.target;
 				this.lastClickDom=d;
+				//手动，设置zindex级别多层的时候下面的元素点击不到
+				d.style.zIndex=98;
 				//先设置父元素选中
 				let field=this.getFieldDom(d);
 				this.setActiveDom(field)
@@ -1234,6 +1538,7 @@
 						case 'showRowPanel':this.showRowPanel(d);break;
 						case 'showRowDetailPanel':this.showRowDetailPanel(d);break;
 						case 'showImgPanel':this.showImgPanel(d);break;
+						case 'showBoxPanel':this.showBoxPanel(d);break;
 					}
 				}
 			});
@@ -1245,7 +1550,7 @@
 		    this.tableEditTool.style.display = 'none'
 			this.tableColumStyle.style.display = 'none';
 		    this.imgEditTool.style.display = 'none'
-			
+			this.boxEditTool.style.display = 'none'
 			//获取父节点config，然后赋值
 			let option=this.getOption(this.getFieldDom(dom));
 			this.setPanelValue(option,this.lineEditTool);
@@ -1256,6 +1561,7 @@
 			this.lineEditTool.style.display = 'none';
 			this.tableColumStyle.style.display = 'none';
 		    this.imgEditTool.style.display = 'none'
+			this.boxEditTool.style.display = 'none'
 			//获取父节点config，然后赋值
 			let option=this.getOption(this.getFieldDom(dom));
 			this.setPanelValue(option,this.tableEditTool);
@@ -1267,6 +1573,7 @@
 			this.lineEditTool.style.display = 'none';
 			this.tableColumStyle.style.display = 'block';
 		    this.imgEditTool.style.display = 'none'
+			this.boxEditTool.style.display = 'none'
 			//先赋值自己，再赋值父类
 			let option1=this.getOption(dom);
 			this.setPanelValue(option1,this.tableEditTool);
@@ -1278,9 +1585,20 @@
 			this.baseEditTool.style.display = 'none'
 			this.lineEditTool.style.display = 'none'
 		    this.tableEditTool.style.display = 'none'
+			this.boxEditTool.style.display = 'none'
 			//获取父节点config，然后赋值
 			let option=this.getOption(this.getFieldDom(dom));
 			this.setPanelValue(option,this.imgEditTool);
+		},
+		showBoxPanel:function(dom){
+			this.boxEditTool.style.display = 'block'
+			this.baseEditTool.style.display = 'none'
+			this.lineEditTool.style.display = 'none'
+		    this.tableEditTool.style.display = 'none'
+			this.imgEditTool.style.display = 'none'
+			//获取父节点config，然后赋值
+			let option=this.getOption(this.getFieldDom(dom));
+			this.setPanelValue(option,this.boxEditTool);
 		},
 		setPanelValue:function(option,dom){
 			$(dom).find(':input[name]').each((i,v)=>{
@@ -1295,24 +1613,38 @@
 		    let domArr = [...document.getElementsByClassName('active')]
 		    if(domArr.length>0){
 		        domArr.forEach(item=>{
-		            if(this.haveClassName(item,'table_row_style')){
+		            if(this.haveClassName(item,'box_style')){
+		                $(item).find('.field').each((i,v)=>{
+							this.deleteDetail(v);
+						});
+						this.deleteDetail(item);
+		            }else if(this.haveClassName(item,'table_row_style')){
 		                item = item.parentNode
+						item.remove();
+						$('.element_item[data-id="'+item.dataset.id+'"]').remove();
 		            }else if(this.haveClassName(item,'td')){
 		                item = item.parentNode.parentNode
-		            }
-		            let tempid=item.dataset.id;
-		            item.remove();
-		            $('.element_item[data-id="'+tempid+'"]').remove();
+						item.remove();
+						$('.element_item[data-id="'+item.dataset.id+'"]').remove();
+		            }else{
+						this.deleteDetail(item);
+					}
+		            
 		        })
 				this.baseEditTool.style.display = 'block'
 		        this.tableEditTool.style.display = 'none'
 		        this.lineEditTool.style.display = 'none'
 		        this.imgEditTool.style.display = 'none'
+				this.boxEditTool.style.display = 'none'
 				//删除左边leftitem的
 				
 		    }else{
 		        alert('请选择要删除的元素')
 		    }
+		},
+		deleteDetail:function(item){
+			item.remove();
+			$('.element_item[data-id="'+item.dataset.id+'"]').remove();
 		},
 		positionChange:function(dom,config){
 			if(typeof config.x!='undefined'){
@@ -1415,11 +1747,35 @@
 		resetRulerXY:function(){
 			this.rulerX.style.width = this.targetbox.offsetWidth + 'px'
 			this.rulerY.style.width = this.targetbox.offsetHeight + 'px'
+			this.drawRuler('rulerXX',false);
+			this.drawRuler('rulerYY',true);
+		},
+		drawRuler:function(id,reversal){
+			const svg = document.getElementById(id);
+			const ticksGroup = svg.querySelector('g[id="ticks"]');
+			ticksGroup.innerHTML='';//删除所有元素。重要！！！
+			let w = this.pxToMm(svg.clientWidth);
+			for (let i = 0; i <= w; i++) {
+				let px = this.mMToPx(i);
+				// 绘制刻度线
+				if (i % 10 == 0) {
+					const tickText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+					tickText.setAttribute('x', px);
+					tickText.setAttribute('y', reversal?20:10);
+					let text=i.toString();
+					if(i==0){
+						text+='(mm)'
+					}
+					tickText.textContent = text;
+					ticksGroup.appendChild(tickText);
+				}
+			
+			}
 		},
 		// 重置
 		clear:function(){
 		    // 移除所有元素
-		    $("#targetbox").children().not("div[id ='rulerX'],div[id ='rulerY']").remove(); 
+		    $("#targetbox").children().not("[id = 'rulerXX'],[id = 'rulerYY'],[id = 'bgsvg']").remove(); 
 		    $("#sortable_list").children().remove();
 		   
 		    // 隐藏右侧工具栏
